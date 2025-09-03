@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>PROTOCOLO {{protocoloNro}}</title>
+  <style>
+    :root{
+      --brand:#153d6f; --brand-dark:#0f2e55; --ink:#1a1a1a; --muted:#4b5563;
+      --line:#0f2e55; --line-soft:#c6d4ea; --thead-bg:#eaf1fb; --thead-ink:#0f2e55;
+      --chip-bg:#f3f6fb; --chip-ink:#334155;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; }
+    body{ font-family: Arial, Helvetica, sans-serif; color: var(--ink); -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-size: 12px; }
+
+    /* Márgenes internos reducidos */
+    .page{ padding: 8mm 10mm 0 10mm; }
+    .footer-spacer{ height: 32mm; }
+
+    .brand-bar{ height: 8px; width: 100%; background: linear-gradient(90deg, var(--brand) 0%, var(--brand-dark) 100%); margin-bottom: 6px; }
+    .header{ border-bottom: 2px solid var(--line); padding-bottom: 6px; margin-bottom: 8px; display:flex; align-items:flex-end; justify-content:space-between; gap: 12px; }
+    .title{ font-size: 20px; font-weight: 700; letter-spacing: .6px; color: var(--brand-dark); }
+    .proto-meta{ text-align:right; font-size:12px; line-height:1.35; }
+    .proto-meta .lbl{ font-weight:700; color:var(--brand-dark); }
+
+    .block{ margin-bottom: 8px; border: 1px solid var(--line-soft); border-radius: 4px; padding: 8px; }
+    .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+    .row{ display:grid; grid-template-columns: 140px 1fr; gap: 8px; align-items:center; min-height: 20px; }
+    .lbl{ font-weight:700; color: var(--brand-dark); white-space:nowrap; }
+    .val{ padding: 1px 0 2px; border-bottom: 1px dotted #8aa2c7; color: var(--ink); }
+
+    /* 🔻 Compactación SOLO en el bloque superior */
+    .block.top .row{ grid-template-columns: 120px 1fr; gap: 4px; }
+    .block.top .val{ padding: 0 0 1px; }
+
+    .assay-head{ margin: 8px 0 4px 0; }
+    .assay-title{ font-weight: 800; color: var(--brand-dark); font-size: 13px; letter-spacing:.3px; }
+    .assay-desc{ color: var(--muted); margin-top: 2px; }
+    .chip{ display:inline-block; padding: 2px 8px; border-radius: 999px; background: var(--chip-bg); color: var(--chip-ink); border: 1px solid var(--line-soft); font-size:11px; margin-left: 6px; }
+
+    table{ width:100%; border-collapse: collapse; margin-top: 6px; font-size: 12px; }
+    thead th{ background: var(--thead-bg); color: var(--thead-ink); border: 1px solid var(--line); padding: 6px 8px; text-align: center; font-weight: 700; }
+    tbody td{ border: 1px solid var(--line); padding: 6px 8px; text-align: center; }
+    .left{ text-align:left; }
+
+    .footer-fixed{ position: fixed; left: 0; right: 0; bottom: 12mm; z-index: 10; }
+    .footer{ padding: 6px 10mm 0 10mm; border-top: 1px solid var(--line);
+      display:grid; grid-template-columns: 1.2fr .8fr 1fr; gap: 10px; font-size: 10px; line-height: 1.35; color:#111; }
+    .lab strong{ color: var(--brand-dark); }
+    .muted{ color: var(--muted); }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="brand-bar"></div>
+
+    <div class="header">
+      <div class="title">{{titulo}}</div>
+      <div class="proto-meta">
+        <div><span class="lbl">Protocolo Nro:</span> {{protocoloNro}}</div>
+        <div><span class="lbl">Fecha de emisión:</span> {{formatDate fechaEmision}}</div>
+      </div>
+    </div>
+
+    <!-- Datos del destinatario (compactados) -->
+    <div class="block top">
+      <div class="grid-2">
+        <div class="row"><div class="lbl">Sr./es de:</div><div class="val">{{srDe}}</div></div>
+        <div class="row"><div class="lbl">Domicilio:</div><div class="val">{{domicilio}}</div></div>
+        <div class="row"><div class="lbl">Atención:</div><div class="val">{{atencion}}</div></div>
+        <div class="row"><div class="lbl">De:</div><div class="val">{{de}}</div></div>
+      </div>
+    </div>
+
+    <!-- Información de la muestra -->
+    <div class="block">
+      <div class="grid-2">
+        <div class="row"><div class="lbl">Producto:</div><div class="val">{{producto}}</div></div>
+        <div class="row"><div class="lbl">Planta Procesadora:</div><div class="val">{{plantaProcesadora}}</div></div>
+        <div class="row"><div class="lbl">Muestra:</div><div class="val">{{muestra}}</div></div>
+        <div class="row"><div class="lbl">Fecha de muestreo:</div><div class="val">{{formatDate fechaMuestreo}}</div></div>
+        <div class="row"><div class="lbl">Envases:</div><div class="val">{{envases}}</div></div>
+      </div>
+    </div>
+
+    <div class="assay-head">
+      <div class="assay-title">
+        {{tituloPlantilla}} <span class="chip">{{descripcionPlantilla}}</span>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          {{#if lote}}<th class="left">Lote</th>{{/if}}
+          {{#if fechaAnalisis}}<th>Fecha de análisis</th>{{/if}}
+          {{#each plantilla}}<th>{{this.nombre}}</th>{{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {{#if lote}}<td class="left">{{lote}}</td>{{/if}}
+          {{#if fechaAnalisis}}<td>{{formatDate fechaAnalisis}}</td>{{/if}}
+          {{#each plantilla}}<td>{{this.valor}}</td>{{/each}}
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="footer-spacer"></div>
+  </div>
+
+  <div class="footer-fixed">
+    <div class="footer">
+      <div class="lab">
+        <div><strong>LABORATORIO:</strong> AROCA  LRS0099 - 6</div>
+        <div class="muted">El laboratorio se compromete a remitir resultados únicamente en acciones específicas,
+          para las cuales se encuentre AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.</div>
+      </div>
+      <div>
+        <div>www.jla.com.ar</div>
+        <div>info@jla.com.ar</div>
+      </div>
+      <div>
+        <div>Bv. Italia Nº 1150 (X5809BAS)</div>
+        <div>General Cabrera - Córdoba - Argentina</div>
+        <div>Tel. +54 358 4931340 / Fax +54 358 4931271</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
