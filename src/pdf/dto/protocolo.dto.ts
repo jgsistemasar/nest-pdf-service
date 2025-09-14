@@ -1,373 +1,334 @@
-// pdf-protocolo.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsArray,
   IsBoolean,
-  IsDateString,
   IsInt,
   IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Type, Transform } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 
-/* ---------------- util: pick compat nombres ---------------- */
-function pick(obj: any, ...keys: string[]) {
-  for (const k of keys) if (obj?.[k] != null) return obj[k];
-  return undefined;
-}
-
-/* ---------------- Items de “plantilla” (ensayos) ---------------- */
-export class EnsayoItemDto {
-  @ApiProperty({ example: 'G2' })
-  @IsString()
-  nombre: string;
-
-  @ApiProperty({ example: 'ND' })
-  @IsString()
-  valor: string;
-}
-
-/* ---------------- DataSet DSProtocolo (cabecera RDLC) ---------------- */
+/* ========= DSProtocolo ========= */
 export class DsProtocoloDto {
-  @ApiPropertyOptional({ example: '8/2025' })
-  @IsOptional()
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'NumeroCompleto', 'numeroCompleto'))
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'NumeroCompleto' })
   numeroCompleto?: string;
 
-  @ApiPropertyOptional({ example: 'ACEITERA GENERAL DEHEZA' })
-  @IsOptional()
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'DeValue', 'deValue'))
-  deValue?: string;
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'CodigoTipoLaboratorio' })
+  codigoTipoLaboratorio?: string;
 
-  @ApiPropertyOptional({ example: 'Córdoba, Argentina' })
-  @IsOptional()
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'DomicilioValue', 'domicilioValue'))
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'Duplicado' })
+  duplicado?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'ProtocoloId' })
+  protocoloId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'NumeroAnio' })
+  numeroAnio?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'IdiomaId' })
+  idiomaId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'Numero' })
+  numero?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'ExportadorId' })
+  exportadorId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'ExportadorLabel' })
+  exportadorLabel?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'ExportadorValue' })
+  exportadorValue?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'ExportadorIncluirEnReporte' })
+  exportadorIncluirEnReporte?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'DomicilioLabel' })
+  domicilioLabel?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'DomicilioValue' })
   domicilioValue?: string;
 
-  @ApiPropertyOptional({ example: 'LRS0005  113' })
-  @IsOptional()
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'CodigoTipoLaboratorio', 'codigoTipoLaboratorio'))
-  codigoTipoLaboratorio?: string;
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'DomicilioIncluirEnReporte' })
+  domicilioIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: false })
-  @IsOptional()
-  @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'Duplicado', 'duplicado')) === true)
-  duplicado?: boolean;
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'AtencionLabel' })
+  atencionLabel?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'AtencionValue' })
+  atencionValue?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'AtencionIncluirEnReporte' })
+  atencionIncluirEnReporte?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'DeLabel' })
+  deLabel?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'DeValue' })
+  deValue?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'DeIncluirEnReporte' })
+  deIncluirEnReporte?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'RepetirCabecera' })
+  repetirCabecera?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'RepetirNotas' })
+  repetirNotas?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose({ name: 'RepetirNotasPreDetalle' })
+  repetirNotasPreDetalle?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'EstadoId' })
+  estadoId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'UsuarioCreacion' })
+  usuarioCreacion?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'FechaCreacion' })
+  fechaCreacion?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'UsuarioModificacion' })
+  usuarioModificacion?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsString()
+  @Expose({ name: 'FechaModificacion' })
+  fechaModificacion?: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'TipoLaboratorioId' })
+  tipoLaboratorioId?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsInt()
+  @Expose({ name: 'NumeroSenasa' })
+  numeroSenasa?: number;
+
+  // del JSON vienen también varias propiedades null (ProtocolosLotes, etc.),
+  // no hacen falta para validar/render, por eso las omitimos.
 }
 
-/* ---------------- DataSet DSProtocoloLotes (1:1 con BE) ---------------- */
+/* ========= DSProtocoloLotes ========= */
 export class DsProtocoloLoteDto {
-  @ApiPropertyOptional({ example: 10 })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'ProtocoloLoteId', 'protocoloLoteId'))
-  protocoloLoteId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt() @Expose({ name: 'ProtocoloLoteId' }) protocoloLoteId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt() @Expose({ name: 'ProtocoloId' }) protocoloId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt() @Expose({ name: 'LoteId' }) loteId?: number;
 
-  @ApiPropertyOptional({ example: 3 })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'ProtocoloId', 'protocoloId'))
-  protocoloId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'FechaMuestreoLabel' }) fechaMuestreoLabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'FechaMuestreoValue' }) fechaMuestreoValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'FechaMuestreoIncluirEnReporte' }) fechaMuestreoIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: 99 })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'LoteId', 'loteId'))
-  loteId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Muestralabel' }) muestralabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'MuestraValue' }) muestraValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'MuestraIncluirEnReporte' }) muestraIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: 'Fecha de muestreo' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'FechaMuestreoLabel', 'fechaMuestreoLabel'))
-  fechaMuestreoLabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'LoteLabel' }) loteLabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'LoteValue' }) loteValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'LoteIncluirEnReporte' }) loteIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: '2025-08-19' })
-  @IsOptional() 
-  @Transform(({ obj, value }) => value ?? pick(obj, 'FechaMuestreoValue', 'fechaMuestreoValue'))
-  fechaMuestreoValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'LugarDeProcesadoLabel' }) lugarDeProcesadoLabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'LugarDeProcesadoValue' }) lugarDeProcesadoValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'LugarDeProcesadoIncluirEnReporte' }) lugarDeProcesadoIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'FechaMuestreoIncluirEnReporte', 'fechaMuestreoIncluirEnReporte')) === true)
-  fechaMuestreoIncluirEnReporte?: boolean;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'FechaAnalisisLabel' }) fechaAnalisisLabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'FechaAnalisisValue' }) fechaAnalisisValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'FechaAnalisisIncluirEnReporte' }) fechaAnalisisIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: 'Nº DE MUESTRA' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Muestralabel', 'muestralabel'))
-  muestralabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'ProductoLabel' }) productoLabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'ProductoValue' }) productoValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'ProductoIncluirEnReporte' }) productoIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: '4578/2025' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'MuestraValue', 'muestraValue'))
-  muestraValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'CantidadEnvaseLabel' }) cantidadEnvaseLabel?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'CantidadEnvaseValue' }) cantidadEnvaseValue?: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'CantidadEnvaseIncluirEnReporte' }) cantidadEnvaseIncluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'MuestraIncluirEnReporte', 'muestraIncluirEnReporte')) === true)
-  muestraIncluirEnReporte?: boolean;
-
-  @ApiPropertyOptional({ example: 'Lote' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'LoteLabel', 'loteLabel'))
-  loteLabel?: string;
-
-  @ApiPropertyOptional({ example: 'LOTE-123' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'LoteValue', 'loteValue'))
-  loteValue?: string;
-
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'LoteIncluirEnReporte', 'loteIncluirEnReporte')) === true)
-  loteIncluirEnReporte?: boolean;
-
-  @ApiPropertyOptional({ example: 'Lugar de procesado' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'LugarDeProcesadoLabel', 'lugarDeProcesadoLabel'))
-  lugarDeProcesadoLabel?: string;
-
-  @ApiPropertyOptional({ example: 'Planta X' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'LugarDeProcesadoValue', 'lugarDeProcesadoValue'))
-  lugarDeProcesadoValue?: string;
-
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'LugarDeProcesadoIncluirEnReporte', 'lugarDeProcesadoIncluirEnReporte')) === true)
-  lugarDeProcesadoIncluirEnReporte?: boolean;
-
-  @ApiPropertyOptional({ example: 'Fecha de análisis' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'FechaAnalisisLabel', 'fechaAnalisisLabel'))
-  fechaAnalisisLabel?: string;
-
-  @ApiPropertyOptional({ example: '2025-08-21' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'FechaAnalisisValue', 'fechaAnalisisValue'))
-  fechaAnalisisValue?: string;
-
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'FechaAnalisisIncluirEnReporte', 'fechaAnalisisIncluirEnReporte')) === true)
-  fechaAnalisisIncluirEnReporte?: boolean;
-
-  @ApiPropertyOptional({ example: 'Producto' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'ProductoLabel', 'productoLabel'))
-  productoLabel?: string;
-
-  @ApiPropertyOptional({ example: 'RUNNER 40/50 COUNT 2025, CROP' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'ProductoValue', 'productoValue'))
-  productoValue?: string;
-
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'ProductoIncluirEnReporte', 'productoIncluirEnReporte')) === true)
-  productoIncluirEnReporte?: boolean;
-
-  @ApiPropertyOptional({ example: 'Cantidad/envase' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'CantidadEnvaseLabel', 'cantidadEnvaseLabel'))
-  cantidadEnvaseLabel?: string;
-
-  @ApiPropertyOptional({ example: '35 BIG BAGS' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'CantidadEnvaseValue', 'cantidadEnvaseValue'))
-  cantidadEnvaseValue?: string;
-
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'CantidadEnvaseIncluirEnReporte', 'cantidadEnvaseIncluirEnReporte')) === true)
-  cantidadEnvaseIncluirEnReporte?: boolean;
-
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'IncluirLoteEnReporte', 'incluirLoteEnReporte')) === true)
-  incluirLoteEnReporte?: boolean;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'IncluirLoteEnReporte' }) incluirLoteEnReporte?: boolean;
 }
 
-/* ---------------- DataSet DSProtocoloNotas / PreDetalle ---------------- */
+/* ========= DSProtocoloLotesDetalle (no-AFLA) ========= */
+export class DsLoteDetalleDto {
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'CodigoEnsayo' }) codigoEnsayo?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Ensayo' }) ensayo?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'ResultadoTexto' }) resultadoTexto?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Formula' }) formula?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'EstaEnTotalizador' }) estaEnTotalizador?: number;
+}
+
+/* ========= DSProtocoloLotesDetalleAFLA ========= */
+export class DsLoteDetalleAFLADto {
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'ProtocoloResultadoId' }) protocoloResultadoId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'LoteId' }) loteId?: number;
+
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Descripcion' }) descripcion?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Adicional' }) adicional?: string;
+
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'DescripcionIncluirEnReporte' }) descripcionIncluirEnReporte?: boolean;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'AdicionalIncluirEnReporte' }) adicionalIncluirEnReporte?: boolean;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'PlantillaIncluirEnReporte' }) plantillaIncluirEnReporte?: boolean;
+
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'AflaG1' }) aflaG1?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'AflaG2' }) aflaG2?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'AflaB1' }) aflaB1?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'AflaB2' }) aflaB2?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'AflaTotal' }) aflaTotal?: string;
+
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'NumberRow' }) numberRow?: number;
+
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'ProtocoloLoteDetalleId' }) protocoloLoteDetalleId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'ProtocoloLotePlantillaId' }) protocoloLotePlantillaId?: number;
+
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'EnsayoId' }) ensayoId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'CodigoEnsayo' }) codigoEnsayo?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Ensayo' }) ensayo?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'OrdenEnsayo' }) ordenEnsayo?: number | null;
+
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Resultado' }) resultado?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'ResultadoTexto' }) resultadoTexto?: string | null;
+
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'LDM' }) ldm?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Unidad' }) unidad?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Referencia' }) referencia?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Test' }) test?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'ReferenciaMinimo' }) referenciaMinimo?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'ReferenciaMaximo' }) referenciaMaximo?: string | null;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Metodo' }) metodo?: string | null;
+
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'IncluirEnReporte' }) incluirEnReporte?: boolean;
+
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Formula' }) formula?: string | null;
+
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'Fraccion' }) fraccion?: string;
+
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'EstaEnTotalizador' }) estaEnTotalizador?: number;
+}
+
+/* ========= DSProtocoloNotas / PreDetalle ========= */
 export class DsProtocoloNotaDto {
-  @ApiPropertyOptional({ example: 1 })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'ProtocoloNotaId', 'protocoloNotaId'))
-  protocoloNotaId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'ProtocoloNotaId' }) protocoloNotaId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'ProtocoloId' }) protocoloId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'NotaId' }) notaId?: number;
 
-  @ApiPropertyOptional({ example: 3 })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'ProtocoloId', 'protocoloId'))
-  protocoloId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() @Expose({ name: 'IncluirEnReporte' }) incluirEnReporte?: boolean;
 
-  @ApiPropertyOptional({ example: 15 })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'NotaId', 'notaId'))
-  notaId?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'Lugar' }) lugar?: number;
+  @ApiPropertyOptional() @IsOptional() @IsInt()    @Expose({ name: 'Orden' }) orden?: number;
 
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'IncluirEnReporte', 'incluirEnReporte')) === true)
-  incluirEnReporte?: boolean;
-
-  @ApiPropertyOptional({ example: 2, description: 'Const_LugarNotas: int' })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Lugar', 'lugar'))
-  lugar?: number;
-
-  @ApiPropertyOptional({ example: 1 })
-  @IsOptional() @IsInt() @Type(() => Number)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Orden', 'orden'))
-  orden?: number;
-
-  @ApiPropertyOptional({ example: 'Texto español' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'TextoES', 'textoES'))
-  textoES?: string;
-
-  @ApiPropertyOptional({ example: 'English text' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'TextoEN', 'textoEN'))
-  textoEN?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'TextoES' }) textoES?: string;
+  @ApiPropertyOptional() @IsOptional() @IsString() @Expose({ name: 'TextoEN' }) textoEN?: string;
 }
 
-/* ---------------- Cuerpo principal del “protocolo” ---------------- */
+/* ========= Protocolo (root data) ========= */
 export class ProtocoloDto {
-  // ---- Campos “planos” ----
-  @ApiProperty({ example: 'PROTOCOLO TITULO' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Titulo', 'titulo'))
-  titulo: string;
+  @ApiProperty() @IsString() titulo: string;
+  @ApiProperty() @IsString() protocoloNro: string;
+  @ApiProperty() @IsString() srDe: string;
+  @ApiProperty() @IsString() domicilio: string;
+  @ApiProperty() @IsString() atencion: string;
+  @ApiProperty() @IsString() de: string;
+  @ApiProperty() @IsString() fechaEmision: string;
+  @ApiProperty() @IsString() envases: string;
+  @ApiProperty() @IsString() producto: string;
+  @ApiProperty() @IsString() plantaProcesadora: string;
+  @ApiProperty() @IsString() muestra: string;
+  @ApiProperty() @IsString() fechaMuestreo: string;
 
-  @ApiProperty({ example: '8/2025' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'ProtocoloNro', 'protocoloNro', 'Protocolo Nro'))
-  protocoloNro: string;
+  @ApiProperty() @IsString() tituloPlantilla: string;
+  @ApiProperty() @IsString() descripcionPlantilla: string;
 
-  @ApiProperty({ example: 'ACEITERA GENERAL DEHEZA' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'SrDe', 'srDe', 'SresDe', 'Sr./es de:', 'Sr./es de'))
-  srDe: string;
+  @ApiProperty({ type: Array }) @IsArray() plantilla: any[];
 
-  @ApiProperty({ example: 'Córdoba, Argentina' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Domicilio', 'domicilio'))
-  domicilio: string;
+  @ApiPropertyOptional() @IsOptional() @IsBoolean() mostrarCheck?: boolean;
+  @ApiPropertyOptional() @IsOptional() @IsString()  codigoTipoLaboratorio?: string;
 
-  @ApiProperty({ example: 'UNX GIRBIS' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Atencion', 'Atención', 'atencion'))
-  atencion: string;
-
-  @ApiProperty({ example: 'Joaquin Gomez' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'De', 'de'))
-  de: string;
-
-  @ApiProperty({ example: '2025-08-20' })
-  @Transform(({ obj, value }) => value ?? pick(obj, 'FechaEmision', 'fechaEmision', 'fecha de emision', 'fechaDeEmision'))
-  fechaEmision: string;
-
-  @ApiProperty({ example: '35 BIG BAGS' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Envases', 'envases'))
-  envases: string;
-
-  @ApiProperty({ example: 'RUNNER 40/50 COUNT 2025, CROP' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Producto', 'producto'))
-  producto: string;
-
-  @ApiProperty({ example: 'UNX Soporte Planta' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'PlantaProcesadora', 'plantaProcesadora', 'Planta Procesadora'))
-  plantaProcesadora: string;
-
-  @ApiProperty({ example: '4578/2025' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'Muestra', 'muestra'))
-  muestra: string;
-
-  @ApiProperty({ example: '2025-08-19' })
-  @Transform(({ obj, value }) => value ?? pick(obj, 'FechaMuestreo', 'fechaMuestreo', 'Fecha de muestreo', 'fechaDeMuestreo'))
-  fechaMuestreo: string;
-
-  @ApiProperty({ example: 'EXPORTACIÓN - AFLATOXINAS (PACR01-HPLC-FLD)' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'TituloPlantilla', 'tituloPlantilla', 'titulo plantilla'))
-  tituloPlantilla: string;
-
-  @ApiProperty({ example: 'ACREDITADO AFLATOXINA X1 ISO 10020 ...' })
-  @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'DescripcionPlantilla', 'descripcionPlantilla', 'descripcion plantilla', 'Descripción Plantilla'))
-  descripcionPlantilla: string;
-
-  @ApiProperty({ type: [EnsayoItemDto] })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => EnsayoItemDto)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'plantilla', 'Plantilla'))
-  plantilla: EnsayoItemDto[];
-
-  // ---- Extras ----
-  @ApiPropertyOptional({ example: true })
-  @IsOptional() @IsBoolean()
-  @Transform(({ obj, value }) => (value ?? pick(obj, 'mostrarCheck', 'MostrarCheck')) === true)
-  mostrarCheck?: boolean;
-
-  @ApiPropertyOptional({ example: 'LRS0005  113' })
-  @IsOptional() @IsString()
-  @Transform(({ obj, value }) => value ?? pick(obj, 'codigoTipoLaboratorio', 'CodigoTipoLaboratorio'))
-  codigoTipoLaboratorio?: string;
-
-  // ---- DataSets embebidos ----
-
-  @ApiPropertyOptional({ type: DsProtocoloDto })
-  @IsOptional()
-  @ValidateNested()
+  @ApiPropertyOptional({ type: [DsProtocoloDto] })
+  @IsOptional() @IsArray()
   @Type(() => DsProtocoloDto)
-  @Transform(({ obj, value }) => value ?? pick(obj, 'dsProtocolo', 'DSProtocolo'))
-  dsProtocolo?: DsProtocoloDto;
+  dsProtocolo?: DsProtocoloDto[];
 
   @ApiPropertyOptional({ type: [DsProtocoloLoteDto] })
   @IsOptional() @IsArray()
-  @ValidateNested({ each: true })
   @Type(() => DsProtocoloLoteDto)
-  @Transform(({ obj, value }) => {
-    const v = value ?? pick(obj, 'dsProtocoloLotes', 'DSProtocoloLotes');
-    if (v == null) return undefined;           // permite null/undefined
-    if (Array.isArray(v)) return v;            // ya es array
-    return [v];                                 // si viene un solo objeto, lo envuelvo
-  })
   dsProtocoloLotes?: DsProtocoloLoteDto[];
+
+  @ApiPropertyOptional({ type: [DsLoteDetalleDto] })
+  @IsOptional() @IsArray()
+  @Type(() => DsLoteDetalleDto)
+  dsProtocoloLotesDetalle?: DsLoteDetalleDto[];
+
+  @ApiPropertyOptional({ type: [DsLoteDetalleAFLADto] })
+  @IsOptional() @IsArray()
+  @Type(() => DsLoteDetalleAFLADto)
+  dsProtocoloLotesDetalleAFLA?: DsLoteDetalleAFLADto[];
 
   @ApiPropertyOptional({ type: [DsProtocoloNotaDto] })
   @IsOptional() @IsArray()
-  @ValidateNested({ each: true })
   @Type(() => DsProtocoloNotaDto)
-  @Transform(({ obj, value }) => {
-    const v = value ?? pick(obj, 'dsProtocoloNotas', 'DSProtocoloNotas');
-    if (v == null) return undefined;           // permite null/undefined
-    if (Array.isArray(v)) return v;            // array OK
-    return [v];                                 // objeto único -> array
-  })
   dsProtocoloNotas?: DsProtocoloNotaDto[];
 
   @ApiPropertyOptional({ type: [DsProtocoloNotaDto] })
   @IsOptional() @IsArray()
-  @ValidateNested({ each: true })
   @Type(() => DsProtocoloNotaDto)
-  @Transform(({ obj, value }) => {
-    const v = value ?? pick(obj, 'dsProtocoloNotasPreDetalle', 'DSProtocoloNotasPreDetalle');
-    if (v == null) return undefined;           // permite null/undefined
-    if (Array.isArray(v)) return v;            // array OK
-    return [v];                                 // objeto único -> array
-  })
   dsProtocoloNotasPreDetalle?: DsProtocoloNotaDto[];
 }
 
-/* ---------------- Envolvente del request /pdf ---------------- */
+/* ========= Envolvente ========= */
 export class GeneratePdfRequestDto {
   @ApiProperty({ example: 'protocolo' })
   @IsString()

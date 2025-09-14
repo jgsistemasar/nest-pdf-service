@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html> 
 <html lang="es">
 <head>
   <meta charset="utf-8">
@@ -55,7 +55,7 @@
 
     /* ===== Notas debajo de la grilla ===== */
     .notes { margin-top: 6mm; }
-    .note  { margin-bottom: 2.5mm; text-align: justify; white-space: pre-wrap; } /* respeta \n y justifica */
+    .note  { margin-bottom: 2.5mm; text-align: justify; white-space: pre-wrap; }
 
     /* ===== Espaciador para pie ===== */
     .footer-spacer { height: 34mm; }
@@ -105,33 +105,42 @@
     <div class="row"><div class="lbl">Fecha de emisión:</div><div class="val">{{formatDate fechaEmision}}</div></div>
   </div>
 
-    {{#each dsProtocoloLotes}}
-      <div class="fields-2">
-        <div class="row-2"><div class="lbl">Envases:</div><div class="val">{{this.cantidadEnvaseValue}}</div></div>
-        <div class="row-2"><div class="lbl">Producto:</div><div class="val">{{this.productoValue}}</div></div>
-        <div class="row-2"><div class="lbl">Planta Procesadora:</div><div class="val">{{this.lugarDeProcesadoValue}}</div></div>
-        <div class="row-2"><div class="lbl">Muestra:</div><div class="val">{{this.muestraValue}}</div></div>
-        <div class="row-2"><div class="lbl">Fecha de muestreo:</div><div class="val">{{formatDate this.fechaMuestreoValue}}</div></div>
-      </div>
+{{#if dsProtocoloLotes}}
+  {{#each dsProtocoloLotes}}
+    <div class="fields-2">
+      <div class="row-2"><div class="lbl">{{this.cantidadEnvaseLabel}}</div><div class="val">{{this.cantidadEnvaseValue}}</div></div>
+      <div class="row-2"><div class="lbl">{{this.productoLabel}}</div><div class="val">{{this.productoValue}}</div></div>
+      <div class="row-2"><div class="lbl">{{this.lugarDeProcesadoLabel}}</div><div class="val">{{this.lugarDeProcesadoValue}}</div></div>
+      <div class="row-2"><div class="lbl">{{this.muestralabel}}</div><div class="val">{{this.muestraValue}}</div></div>
+      <div class="row-2"><div class="lbl">{{this.fechaMuestreoLabel}}</div><div class="val">{{formatDate this.fechaMuestreoValue}}</div></div>
+    </div>
+  {{/each}}
+{{/if}}
+
+  {{!-- Notas pre-detalle si se las quiere arriba (opcional) --}}
+  {{#if dsProtocoloNotasPreDetalle}}
+    {{#each dsProtocoloNotasPreDetalle}}
+      {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
     {{/each}}
+  {{/if}}
 
-    {{!-- Notas pre-detalle (si querés mostrarlas también debajo) --}}
-    {{#if dsProtocoloNotasPreDetalle}}
-      {{#each dsProtocoloNotasPreDetalle}}
-        {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
+  {{#if dsProtocoloLotesDetalleAFLA}}
+      {{#each dsProtocoloLotesDetalleAFLA}}
+        <div class="assay-title">{{this.descripcion}}</div>
+        <div class="assay-desc">{{this.adicional}}</div>
       {{/each}}
-    {{/if}}
-  </div>
+  {{/if}}
 
-  <div class="assay-title">{{tituloPlantilla}}</div>
-  <div class="assay-desc">{{descripcionPlantilla}}</div>
-
-  <!-- Tabla -->
+  <!-- Tabla (se deja tal cual tu lógica) -->
   <table>
     <thead>
       <tr>
-        <th class="left">Lote</th>
-        <th>Fecha de análisis</th>
+        {{#if dsProtocoloLotes}}
+        {{#each dsProtocoloLotes}}
+        <th class="left">{{this.loteLabel}}</th>
+        <th>{{this.fechaAnalisisLabel}}</th>
+        {{/each}}
+        {{/if}}
         <th>Fracción</th>
         {{#if columnas}}
           {{#each columnas}}<th>{{this}}</th>{{/each}}
@@ -170,13 +179,12 @@
 
   <!-- ===== NOTAS (debajo de la grilla) ===== -->
   <div class="notes">
-    {{!-- Notas principales (post-detalle) --}}
     {{#if dsProtocoloNotas}}
       {{#each dsProtocoloNotas}}
         {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
       {{/each}}
     {{/if}}
-
+  </div>
 
   <div class="footer-spacer"></div>
 
@@ -188,7 +196,19 @@
     </div>
 
     <div class="foot-text">
-      <span class="foot-strong">LABORATORIO N°: {{codigoTipoLaboratorio}}</span><br/>
+      <span class="foot-strong">
+        LABORATORIO N°:
+        {{!-- usa plano si viene, si no toma dsProtocolo[0].codigoTipoLaboratorio --}}
+        {{#if codigoTipoLaboratorio}}
+          {{codigoTipoLaboratorio}}
+        {{else}}
+          {{#if dsProtocolo}}
+            {{#with (lookup dsProtocolo 0)}}
+              {{codigoTipoLaboratorio}}
+            {{/with}}
+          {{/if}}
+        {{/if}}
+      </span><br/>
       El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre
       AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
     </div>
@@ -199,8 +219,15 @@
       <div>SENASA en cumplimiento de la resolución 436/02</div>
     </div>
 
+    {{!-- DUPLICADO: usa plano o dsProtocolo[0].duplicado --}}
     {{#if duplicado}}
       <div class="foot-dup">DUPLICADO</div>
+    {{else}}
+      {{#if dsProtocolo}}
+        {{#with (lookup dsProtocolo 0)}}
+          {{#if duplicado}}<div class="foot-dup">DUPLICADO</div>{{/if}}
+        {{/with}}
+      {{/if}}
     {{/if}}
 
     <div class="page-num">Página <span class="pageNumber">1</span> de <span class="totalPages">1</span></div>
