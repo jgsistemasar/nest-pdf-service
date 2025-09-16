@@ -128,39 +128,48 @@
 
   <!-- TABLA DE ENSAYOS (A/B) -->
   <table>
-    <thead>
-      <tr>
-        <th class="left">Lote:</th>
-        <th>Fecha de análisis:</th>
-        <th>Fracción</th>
-        <th>G2</th>
-        <th>G1</th>
-        <th>B2</th>
-        <th>B1</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#if dsProtocoloLotes}}
-        {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
-          {{#if ../dsProtocoloLotesDetalleAFLA}}
-            {{#each ../dsProtocoloLotesDetalleAFLA}}
-              <tr>
-                <td class="left">{{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}</td>
-                <td>{{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}</td>
-                <td>{{#if fraccion}}{{fraccion}}{{/if}}</td>
-                <td>{{aflaG2}}</td>
-                <td>{{aflaG1}}</td>
-                <td>{{aflaB2}}</td>
-                <td>{{aflaB1}}</td>
-                <td>{{aflaTotal}}</td>
-              </tr>
-            {{/each}}
-          {{/if}}
-        {{/with}}
-      {{/if}}
-    </tbody>
-  </table>
+  <thead>
+    <tr>
+      <th class="left">Lote:</th>
+      <th>Fecha de análisis:</th>
+      <th>Fracción</th>
+      <th>G2</th>
+      <th>G1</th>
+      <th>B2</th>
+      <th>B1</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{!-- Usamos el primer lote para mostrar Lote/Fecha y recorremos las filas AFLA --}}
+    {{#if dsProtocoloLotes}}
+      {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
+        {{#if ../dsProtocoloLotesDetalleAFLA.length}}
+          {{#each ../dsProtocoloLotesDetalleAFLA}}
+            <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
+              {{!-- Lote y Fecha aparecen una sola vez, abarcando todas las fracciones --}}
+              {{#if @first}}
+                <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
+                  {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
+                </td>
+                <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
+                  {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
+                </td>
+              {{/if}}
+
+              <td>{{fraccion}}</td>
+              <td>{{aflaG2}}</td>
+              <td>{{aflaG1}}</td>
+              <td>{{aflaB2}}</td>
+              <td>{{aflaB1}}</td>
+              <td>{{aflaTotal}}</td>
+            </tr>
+          {{/each}}
+        {{/if}}
+      {{/with}}
+    {{/if}}
+  </tbody>
+</table>
 
   <!-- NOTAS (debajo de la grilla) -->
   <div class="notes">
