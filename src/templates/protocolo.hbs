@@ -5,7 +5,7 @@
   <title>PROTOCOLO {{protocoloNro}}</title>
   <style>
     /* Página y tipografía */
-    @page { margin: 15mm 12mm 28mm 12mm; }
+    @page { margin: 8mm 12mm 16mm 18mm; }
     html, body { margin:0; padding:0; }
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -15,24 +15,47 @@
       print-color-adjust: exact !important;
     }
 
-    /* ===== CABECERA ===== */
-    .masthead {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr auto 4px;
-      align-items: center;
-      column-gap: 8mm;
-      margin: 6mm 0 4mm 0;
+    /* ===== CABECERA =====
+       3 columnas:  [línea izq 1fr] [logo auto] [contacto+barra 1fr]
+       Fila 2: líneas horizontales; la derecha pasa POR DEBAJO del contacto+barra. */
+    .masthead{
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      grid-template-rows: auto 2px;   /* fila 2 = líneas */
+      align-items:center;
+      column-gap: 10mm;
+      margin: 0 0 3mm 0; 
     }
-    .mh-line { height: 2px; background:#6f6f6f; }
-    .mh-logo { width: 36mm; height: 20mm; display:flex; align-items:center; justify-content:center; }
-    .mh-logo img { max-height:20mm; max-width:36mm; object-fit:contain; }
-    .mh-contact { text-align: right; line-height: 1.25; font-size: 12px; color:#000; white-space: nowrap; padding-right: 3mm; }
-    .mh-bar { width:4px; height:22mm; background:#781719; }
+    /* Logo centrado en la página (col 2) */
+    .mh-logo{
+      grid-column: 2; grid-row: 1;
+      width: 36mm; height: 20mm;
+      display:flex; align-items:center; justify-content:center;
+      justify-self:center;
+    }
+    .mh-logo img{ max-height:20mm; max-width:36mm; object-fit:contain; }
 
-    /* ===== Título + nro a la derecha ===== */
-    .hdr { display:grid; grid-template-columns: 1fr auto; align-items:end; margin-bottom: 6mm; }
-    .hdr-title { text-align:center; font-weight:700; text-decoration:underline; font-size:20px; }
-    .hdr-meta { font-size:12px; white-space:nowrap; }
+    /* Bloque contacto + barra (col 3), anclado al borde derecho */
+    .mh-right{
+      grid-column: 3; grid-row: 1;
+      display:flex; align-items:flex-start; justify-content:flex-end;
+      gap: 2mm;                 /* acercar/alejar contacto a la barra (0–3mm) */
+      justify-self: end;        /* pega todo al borde derecho de la página */
+    }
+    .mh-contact{
+      text-align: right; line-height: 1.25; font-size: 12px; color:#000; white-space: nowrap;
+    }
+    .mh-bar{ width:4px; height:22mm; background:#781719; align-self:stretch; }
+
+    /* Líneas horizontales (fila 2): izquierda en col 1, derecha en col 3 (pasa debajo del contacto+barra) */
+    .mh-leftline, .mh-rightline{ height: 1px; background:#6f6f6f; }
+    .mh-leftline  { grid-column: 1; grid-row: 2; }
+    .mh-rightline { grid-column: 3; grid-row: 2; }
+
+    /* ===== Título + nro a la derecha (título centrado real) ===== */
+    .hdr { display:grid; grid-template-columns: 1fr auto 1fr; align-items:end; margin-bottom: 6mm; }
+    .hdr-title { grid-column:2; text-align:center; font-weight:700; text-decoration:underline; font-size:20px; }
+    .hdr-meta  { grid-column:3; font-size:12px; white-space:nowrap; justify-self:end; }
 
     /* ===== Campos en columna ===== */
     .fields { margin-top:2mm; margin-bottom:4mm; border-bottom:1px solid #000; padding-bottom:2mm; }
@@ -58,10 +81,10 @@
     .note  { margin-bottom: 2.5mm; text-align: justify; white-space: pre-wrap; }
 
     /* ===== Espaciador para pie ===== */
-    .footer-spacer { height: 34mm; }
+    .footer-spacer { height: 18mm; }
 
     /* ===== PIE ===== */
-    .footer-fixed { position: fixed; left:0; right:0; bottom:10mm; z-index:10; color:#000; }
+    .footer-fixed { position: fixed; left:0; right:0; bottom:4mm; z-index:10; color:#000; }
     .foot-top { display:grid; grid-template-columns: 6mm 1fr; align-items:center; column-gap: 4mm; margin-bottom: 2mm; }
     .foot-bar  { width:6mm; height:16px; background:#781719; }
     .foot-line { height:1px; background:#6f6f6f; }
@@ -77,21 +100,27 @@
 
   <!-- CABECERA -->
   <div class="masthead">
-    <div class="mh-line"></div>
+    <div class="mh-leftline"></div>
+
     <div class="mh-logo"><img src="icon-512x512.png" alt="Logo"></div>
-    <div class="mh-line"></div>
-    <div class="mh-contact">
-      <div>www.jla.com.ar</div>
-      <div>info@jla.com.ar</div>
-      <div>Bv. Italia N° 1150</div>
-      <div>(X5809BAS) General Cabrera - Córdoba - Argentina</div>
-      <div>Tel. 54 358 4931340 / Fax 54 358 4931271</div>
+
+    <div class="mh-right">
+      <div class="mh-contact">
+        <div>www.jla.com.ar</div>
+        <div>info@jla.com.ar</div>
+        <div>Bv. Italia N° 1150</div>
+        <div>(X5809BAS) General Cabrera - Córdoba - Argentina</div>
+        <div>Tel. 54 358 4931340 / Fax 54 358 4931271</div>
+      </div>
+      <div class="mh-bar"></div>
     </div>
-    <div class="mh-bar"></div>
+
+    <div class="mh-rightline"></div>
   </div>
 
   <!-- Título + nro -->
   <div class="hdr">
+    <div></div>
     <div class="hdr-title">PROTOCOLO</div>
     <div class="hdr-meta">Protocolo Nro: {{protocoloNro}}</div>
   </div>
@@ -105,7 +134,7 @@
     <div class="row"><div class="lbl">Fecha de emisión:</div><div class="val">{{formatDate fechaEmision}}</div></div>
   </div>
 
-  {{!-- Datos del primer (o únicos) lote(s) – ahora con PascalCase --}}
+  {{!-- Lotes (minúscula según tu body) --}}
   {{#if dsProtocoloLotes}}
     {{#each dsProtocoloLotes}}
       <div class="fields-2">
@@ -118,7 +147,7 @@
     {{/each}}
   {{/if}}
 
-  {{!-- Título de ensayo: del primer item de AFLA si existe --}}
+  {{!-- Encabezado de ensayo (AFLA) --}}
   {{#if dsProtocoloLotesDetalleAFLA}}
     {{#with (lookup dsProtocoloLotesDetalleAFLA 0) as |afla0|}}
       {{#if afla0.descripcion}}<div class="assay-title">{{afla0.descripcion}}</div>{{/if}}
@@ -126,52 +155,49 @@
     {{/with}}
   {{/if}}
 
-  <!-- TABLA DE ENSAYOS (A/B) -->
+  <!-- Tabla de ensayos (A/B con Lote/Fecha una sola vez) -->
   <table>
-  <thead>
-    <tr>
-      <th class="left">Lote:</th>
-      <th>Fecha de análisis:</th>
-      <th>Fracción</th>
-      <th>G2</th>
-      <th>G1</th>
-      <th>B2</th>
-      <th>B1</th>
-      <th>Total</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{!-- Usamos el primer lote para mostrar Lote/Fecha y recorremos las filas AFLA --}}
-    {{#if dsProtocoloLotes}}
-      {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
-        {{#if ../dsProtocoloLotesDetalleAFLA.length}}
-          {{#each ../dsProtocoloLotesDetalleAFLA}}
-            <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
-              {{!-- Lote y Fecha aparecen una sola vez, abarcando todas las fracciones --}}
-              {{#if @first}}
-                <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
-                  {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
-                </td>
-                <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
-                  {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
-                </td>
-              {{/if}}
+    <thead>
+      <tr>
+        <th class="left">Lote:</th>
+        <th>Fecha de análisis:</th>
+        <th>Fracción</th>
+        <th>G2</th>
+        <th>G1</th>
+        <th>B2</th>
+        <th>B1</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#if dsProtocoloLotes}}
+        {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
+          {{#if ../dsProtocoloLotesDetalleAFLA.length}}
+            {{#each ../dsProtocoloLotesDetalleAFLA}}
+              <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
+                {{#if @first}}
+                  <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
+                    {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
+                  </td>
+                  <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
+                    {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
+                  </td>
+                {{/if}}
+                <td>{{fraccion}}</td>
+                <td>{{aflaG2}}</td>
+                <td>{{aflaG1}}</td>
+                <td>{{aflaB2}}</td>
+                <td>{{aflaB1}}</td>
+                <td>{{aflaTotal}}</td>
+              </tr>
+            {{/each}}
+          {{/if}}
+        {{/with}}
+      {{/if}}
+    </tbody>
+  </table>
 
-              <td>{{fraccion}}</td>
-              <td>{{aflaG2}}</td>
-              <td>{{aflaG1}}</td>
-              <td>{{aflaB2}}</td>
-              <td>{{aflaB1}}</td>
-              <td>{{aflaTotal}}</td>
-            </tr>
-          {{/each}}
-        {{/if}}
-      {{/with}}
-    {{/if}}
-  </tbody>
-</table>
-
-  <!-- NOTAS (debajo de la grilla) -->
+  <!-- NOTAS -->
   <div class="notes">
     {{#if dsProtocoloNotas}}
       {{#each dsProtocoloNotas}}
@@ -212,7 +238,6 @@
       <div>SENASA en cumplimiento de la resolución 436/02</div>
     </div>
 
-    {{!-- DUPLICADO: plano o dsProtocolo[0].Duplicado --}}
     {{#if duplicado}}
       <div class="foot-dup">DUPLICADO</div>
     {{else}}
