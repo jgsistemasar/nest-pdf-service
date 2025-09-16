@@ -288,6 +288,11 @@ export class ProtocoloDto {
   @ApiProperty() @IsString() plantaProcesadora: string;
   @ApiProperty() @IsString() muestra: string;
   @ApiProperty() @IsString() fechaMuestreo: string;
+  @ApiProperty()  firmado: boolean;
+  @ApiProperty() @IsString() marcaAguaUrl: string;
+
+
+
 
   @ApiProperty() @IsString() tituloPlantilla: string;
   @ApiProperty() @IsString() descripcionPlantilla: string;
