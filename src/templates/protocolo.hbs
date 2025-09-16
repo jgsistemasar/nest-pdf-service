@@ -105,79 +105,64 @@
     <div class="row"><div class="lbl">Fecha de emisión:</div><div class="val">{{formatDate fechaEmision}}</div></div>
   </div>
 
-{{#if dsProtocoloLotes}}
-  {{#each dsProtocoloLotes}}
-    <div class="fields-2">
-      <div class="row-2"><div class="lbl">{{this.cantidadEnvaseLabel}}</div><div class="val">{{this.cantidadEnvaseValue}}</div></div>
-      <div class="row-2"><div class="lbl">{{this.productoLabel}}</div><div class="val">{{this.productoValue}}</div></div>
-      <div class="row-2"><div class="lbl">{{this.lugarDeProcesadoLabel}}</div><div class="val">{{this.lugarDeProcesadoValue}}</div></div>
-      <div class="row-2"><div class="lbl">{{this.muestralabel}}</div><div class="val">{{this.muestraValue}}</div></div>
-      <div class="row-2"><div class="lbl">{{this.fechaMuestreoLabel}}</div><div class="val">{{formatDate this.fechaMuestreoValue}}</div></div>
-    </div>
-  {{/each}}
-{{/if}}
-
-  {{!-- Notas pre-detalle si se las quiere arriba (opcional) --}}
-  {{#if dsProtocoloNotasPreDetalle}}
-    {{#each dsProtocoloNotasPreDetalle}}
-      {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
+  {{!-- Datos del primer (o únicos) lote(s) – ahora con PascalCase --}}
+  {{#if dsProtocoloLotes}}
+    {{#each dsProtocoloLotes}}
+      <div class="fields-2">
+        <div class="row-2"><div class="lbl">{{this.cantidadEnvaseLabel}}</div><div class="val">{{this.cantidadEnvaseValue}}</div></div>
+        <div class="row-2"><div class="lbl">{{this.productoLabel}}</div><div class="val">{{this.productoValue}}</div></div>
+        <div class="row-2"><div class="lbl">{{this.lugarDeProcesadoLabel}}</div><div class="val">{{this.lugarDeProcesadoValue}}</div></div>
+        <div class="row-2"><div class="lbl">{{this.muestralabel}}</div><div class="val">{{this.muestraValue}}</div></div>
+        <div class="row-2"><div class="lbl">{{this.fechaMuestreoLabel}}</div><div class="val">{{this.fechaMuestreoValue}}</div></div>
+      </div>
     {{/each}}
   {{/if}}
 
+  {{!-- Título de ensayo: del primer item de AFLA si existe --}}
   {{#if dsProtocoloLotesDetalleAFLA}}
-      {{#each dsProtocoloLotesDetalleAFLA}}
-        <div class="assay-title">{{this.descripcion}}</div>
-        <div class="assay-desc">{{this.adicional}}</div>
-      {{/each}}
+    {{#with (lookup dsProtocoloLotesDetalleAFLA 0) as |afla0|}}
+      {{#if afla0.descripcion}}<div class="assay-title">{{afla0.descripcion}}</div>{{/if}}
+      {{#if afla0.adicional}}<div class="assay-desc">{{afla0.adicional}}</div>{{/if}}
+    {{/with}}
   {{/if}}
 
-  <!-- Tabla (se deja tal cual tu lógica) -->
+  <!-- TABLA DE ENSAYOS (A/B) -->
   <table>
     <thead>
       <tr>
-        {{#if dsProtocoloLotes}}
-        {{#each dsProtocoloLotes}}
-        <th class="left">{{this.loteLabel}}</th>
-        <th>{{this.fechaAnalisisLabel}}</th>
-        {{/each}}
-        {{/if}}
+        <th class="left">Lote:</th>
+        <th>Fecha de análisis:</th>
         <th>Fracción</th>
-        {{#if columnas}}
-          {{#each columnas}}<th>{{this}}</th>{{/each}}
-        {{else}}
-          {{#each plantilla}}<th>{{this.nombre}}</th>{{/each}}
-        {{/if}}
+        <th>G2</th>
+        <th>G1</th>
+        <th>B2</th>
+        <th>B1</th>
         <th>Total</th>
       </tr>
     </thead>
     <tbody>
-      {{#if resultados}}
-        {{#each resultados}}
-          <tr>
-            <td class="left">{{../lote}}</td>
-            <td>{{formatDate ../fechaAnalisis}}</td>
-            <td>{{fraccion}}</td>
-            {{#if valores}}
-              {{#each valores}}<td>{{this}}</td>{{/each}}
-            {{else}}
-              {{#each ../columnas}}<td>{{lookup ../this this}}</td>{{/each}}
-            {{/if}}
-            <td>{{total}}</td>
-          </tr>
-        {{/each}}
-      {{else}}
-        <tr>
-          <td class="left">{{lote}}</td>
-          <td>{{formatDate fechaAnalisis}}</td>
-          <td>{{fraccion}}</td>
-          {{#each plantilla}}<td>{{this.valor}}</td>{{/each}}
-          <td>{{total}}</td>
-        </tr>
+      {{#if dsProtocoloLotes}}
+        {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
+          {{#if ../dsProtocoloLotesDetalleAFLA}}
+            {{#each ../dsProtocoloLotesDetalleAFLA}}
+              <tr>
+                <td class="left">{{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}</td>
+                <td>{{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}</td>
+                <td>{{#if fraccion}}{{fraccion}}{{/if}}</td>
+                <td>{{aflaG2}}</td>
+                <td>{{aflaG1}}</td>
+                <td>{{aflaB2}}</td>
+                <td>{{aflaB1}}</td>
+                <td>{{aflaTotal}}</td>
+              </tr>
+            {{/each}}
+          {{/if}}
+        {{/with}}
       {{/if}}
     </tbody>
   </table>
 
-  <!-- ===== NOTAS (debajo de la grilla) ===== -->
+  <!-- NOTAS (debajo de la grilla) -->
   <div class="notes">
     {{#if dsProtocoloNotas}}
       {{#each dsProtocoloNotas}}
@@ -198,7 +183,6 @@
     <div class="foot-text">
       <span class="foot-strong">
         LABORATORIO N°:
-        {{!-- usa plano si viene, si no toma dsProtocolo[0].codigoTipoLaboratorio --}}
         {{#if codigoTipoLaboratorio}}
           {{codigoTipoLaboratorio}}
         {{else}}
@@ -219,13 +203,13 @@
       <div>SENASA en cumplimiento de la resolución 436/02</div>
     </div>
 
-    {{!-- DUPLICADO: usa plano o dsProtocolo[0].duplicado --}}
+    {{!-- DUPLICADO: plano o dsProtocolo[0].Duplicado --}}
     {{#if duplicado}}
       <div class="foot-dup">DUPLICADO</div>
     {{else}}
       {{#if dsProtocolo}}
         {{#with (lookup dsProtocolo 0)}}
-          {{#if duplicado}}<div class="foot-dup">DUPLICADO</div>{{/if}}
+          {{#if Duplicado}}<div class="foot-dup">DUPLICADO</div>{{/if}}
         {{/with}}
       {{/if}}
     {{/if}}
