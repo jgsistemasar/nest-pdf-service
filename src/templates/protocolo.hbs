@@ -83,11 +83,24 @@
     /* ===== Espaciador para pie ===== */
     .footer-spacer { height: 18mm; }
 
-    /* ===== PIE ===== */
+    /* ===== PIE =====  (ajustado a tu imagen) */
     .footer-fixed { position: fixed; left:0; right:0; bottom:4mm; z-index:10; color:#000; }
-    .foot-top { display:grid; grid-template-columns: 6mm 1fr; align-items:center; column-gap: 4mm; margin-bottom: 2mm; }
-    .foot-bar  { width:4mm; height:55px; align-self:stretch; background:#781719; }
-    .foot-line { height:1px; background:#6f6f6f; }
+
+    /* Panel con borde superior gris y barra roja a la izquierda */
+    .footer-box{
+      position: relative;
+      border-top: 1px solid #6f6f6f;     /* línea gris arriba */
+      padding: 2mm 0 0 6mm;              /* deja lugar para la barra y aire al texto */
+    }
+    .footer-box::before{
+      content: "";
+      position: absolute;
+      left: 0;
+      top: -1px;                         /* cubre el inicio de la línea gris */
+      bottom: 0;
+      width: 4mm;                        /* grosor de la barra */
+      background: #781719;               /* rojo */
+    }
 
     .foot-text   { font-size:12px; line-height:1.35; }
     .foot-strong { font-weight:700; }
@@ -159,8 +172,8 @@
   <table>
     <thead>
       <tr>
-        <th class="left">Lote</th>
-        <th>Fecha de análisis</th>
+        <th class="left">Lote:</th>
+        <th>Fecha de análisis:</th>
         <th>Fracción</th>
         <th>G2</th>
         <th>G1</th>
@@ -208,47 +221,44 @@
 
   <div class="footer-spacer"></div>
 
-  <!-- PIE -->
+  <!-- PIE (borde superior gris + barra roja izquierda rodeando el texto) -->
   <div class="footer-fixed">
-    <div class="foot-top">
-      <div class="foot-bar"></div>
-      <div class="foot-line"></div>
-    </div>
-
-    <div class="foot-text">
-      <span class="foot-strong">
-        LABORATORIO N°:
-        {{#if codigoTipoLaboratorio}}
-          {{codigoTipoLaboratorio}}
-        {{else}}
-          {{#if dsProtocolo}}
-            {{#with (lookup dsProtocolo 0)}}
-              {{codigoTipoLaboratorio}}
-            {{/with}}
+    <div class="footer-box">
+      <div class="foot-text">
+        <span class="foot-strong">
+          LABORATORIO N°:
+          {{#if codigoTipoLaboratorio}}
+            {{codigoTipoLaboratorio}}
+          {{else}}
+            {{#if dsProtocolo}}
+              {{#with (lookup dsProtocolo 0)}}
+                {{codigoTipoLaboratorio}}
+              {{/with}}
+            {{/if}}
           {{/if}}
+        </span><br/>
+        El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre
+        AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
+      </div>
+
+      <div class="foot-center">
+        <div class="foot-strong">COPIA INFORMATIVA</div>
+        <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
+        <div>SENASA en cumplimiento de la resolución 436/02</div>
+      </div>
+
+      {{#if duplicado}}
+        <div class="foot-dup">DUPLICADO</div>
+      {{else}}
+        {{#if dsProtocolo}}
+          {{#with (lookup dsProtocolo 0)}}
+            {{#if Duplicado}}<div class="foot-dup">DUPLICADO</div>{{/if}}
+          {{/with}}
         {{/if}}
-      </span><br/>
-      El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre
-      AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
-    </div>
-
-    <div class="foot-center">
-      <div class="foot-strong">COPIA INFORMATIVA</div>
-      <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
-      <div>SENASA en cumplimiento de la resolución 436/02</div>
-    </div>
-
-    {{#if duplicado}}
-      <div class="foot-dup">DUPLICADO</div>
-    {{else}}
-      {{#if dsProtocolo}}
-        {{#with (lookup dsProtocolo 0)}}
-          {{#if Duplicado}}<div class="foot-dup">DUPLICADO</div>{{/if}}
-        {{/with}}
       {{/if}}
-    {{/if}}
 
-    <div class="page-num">Página <span class="pageNumber">1</span> de <span class="totalPages">1</span></div>
+      <div class="page-num">Página <span class="pageNumber">1</span> de <span class="totalPages">1</span></div>
+    </div>
   </div>
 
 </body>
