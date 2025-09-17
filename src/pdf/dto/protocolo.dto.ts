@@ -288,8 +288,6 @@ export class ProtocoloDto {
   @ApiProperty() @IsString() plantaProcesadora: string;
   @ApiProperty() @IsString() muestra: string;
   @ApiProperty() @IsString() fechaMuestreo: string;
-  @ApiProperty()  firmado: boolean;
-  @ApiProperty() @IsString() marcaAguaUrl: string;
 
 
 
@@ -338,6 +336,14 @@ export class GeneratePdfRequestDto {
   @ApiProperty({ example: 'protocolo' })
   @IsString()
   tipoDocumento: 'protocolo';
+
+  @ApiProperty({ example: false })
+  @IsBoolean()
+  firmado: false;
+
+  @ApiProperty({ example: false })
+  @IsBoolean()
+  duplicado: false;
 
   @ApiProperty({ type: ProtocoloDto })
   @ValidateNested()
