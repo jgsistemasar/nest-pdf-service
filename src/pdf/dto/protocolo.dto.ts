@@ -7,7 +7,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Expose, Type } from 'class-transformer';
+import { Expose, Type, Transform } from 'class-transformer';
 
 /* ========= DSProtocolo ========= */
 export class DsProtocoloDto {
@@ -23,8 +23,16 @@ export class DsProtocoloDto {
 
   @ApiPropertyOptional()
   @IsOptional() @IsBoolean()
-  @Expose({ name: 'Duplicado' })
+  @Expose()
+  @Transform(({ value }) => value === true || value === 'true' || value === 1 || value === '1')
   duplicado?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose()
+  @Transform(({ value }) => value === true || value === 'true' || value === 1 || value === '1')
+  firmado?: boolean;
+
 
   @ApiPropertyOptional()
   @IsOptional() @IsInt()
@@ -288,6 +296,17 @@ export class ProtocoloDto {
   @ApiProperty() @IsString() plantaProcesadora: string;
   @ApiProperty() @IsString() muestra: string;
   @ApiProperty() @IsString() fechaMuestreo: string;
+   @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose()
+  @Transform(({ value }) => value === true || value === 'true' || value === 1 || value === '1')
+  duplicado?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional() @IsBoolean()
+  @Expose()
+  @Transform(({ value }) => value === true || value === 'true' || value === 1 || value === '1')
+  firmado?: boolean;
 
 
 
@@ -337,13 +356,6 @@ export class GeneratePdfRequestDto {
   @IsString()
   tipoDocumento: 'protocolo';
 
-  @ApiProperty({ example: false })
-  @IsBoolean()
-  firmado: false;
-
-  @ApiProperty({ example: false })
-  @IsBoolean()
-  duplicado: false;
 
   @ApiProperty({ type: ProtocoloDto })
   @ValidateNested()

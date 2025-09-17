@@ -131,7 +131,7 @@
   {{#if firmado}}
     <style>
       .wm::before{
-        background-image: url('{{#if marcaAguaUrl}}{{marcaAguaUrl}}{{else}}marca-agua.png{{/if}}');
+        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNdfIL1xaxlZxdR6fhwvRda6-ZbOm9mVjCJg&s");
       }
     </style>
   {{/if}}
@@ -270,22 +270,32 @@
         El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre
         AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
       </div>
-
-      <div class="foot-center">
-        <div class="foot-strong">COPIA INFORMATIVA</div>
-        <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
-        <div>SENASA en cumplimiento de la resolución 436/02</div>
-      </div>
-
-      {{#if duplicado}}
+        {{!-- Mostrar solo si es duplicado (plano o desde dsProtocolo[0]) --}}
+      {{!-- Mostrar SOLO cuando duplicado = true (root) o dsProtocolo[0].Duplicado = true --}}
+{{#if @root.duplicado}}
+  <div class="foot-center">
+    <div class="foot-strong">COPIA INFORMATIVA</div>
+    <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
+    <div>SENASA en cumplimiento de la resolución 436/02</div>
+  </div>
+  <div class="foot-dup">DUPLICADO</div>
+{{else}}
+  {{#if @root.dsProtocolo}}
+    {{#with (lookup @root.dsProtocolo 0) as |p0|}}
+      {{#if p0.Duplicado}}
+        <div class="foot-center">
+          <div class="foot-strong">COPIA INFORMATIVA</div>
+          <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
+          <div>SENASA en cumplimiento de la resolución 436/02</div>
+        </div>
         <div class="foot-dup">DUPLICADO</div>
-      {{else}}
-        {{#if dsProtocolo}}
-          {{#with (lookup dsProtocolo 0)}}
-            {{#if Duplicado}}<div class="foot-dup">DUPLICADO</div>{{/if}}
-          {{/with}}
-        {{/if}}
       {{/if}}
+    {{/with}}
+  {{/if}}
+{{/if}}
+
+
+
 
       <div class="page-num">Página <span class="pageNumber">1</span> de <span class="totalPages">1</span></div>
     </div>

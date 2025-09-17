@@ -16,6 +16,7 @@ export class PdfService {
   }
 
   private templatesDir = path.resolve(__dirname, '../templates');
+  
 
   private compileTemplate(templateName: string, data: any): string {
     const filePath = path.join(this.templatesDir, `${templateName}.hbs`);
