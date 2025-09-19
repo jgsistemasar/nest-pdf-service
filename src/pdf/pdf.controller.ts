@@ -7,6 +7,7 @@ import { CreatePdfDto, TipoDocumento } from './dto/create-pdf.dto';
 import { ProtocoloDto } from './dto/protocolo.dto';
 import { ReporteDto } from './dto/reporte.dto';
 import { CertificadoDto } from './dto/certificado.dto';
+import { PlanillaMuestreoDto } from './dto/planilla-muestreo.dto';
 
 @ApiTags('pdf')
 @ApiBearerAuth('JWT-auth')
@@ -28,6 +29,10 @@ export class PdfController {
       case TipoDocumento.PROTOCOLO:
         buffer = await this.pdfService.generate('protocolo', body.data as ProtocoloDto);
         filename = 'protocolo.pdf';
+        break;
+      case TipoDocumento.PLANILLAMUESTREO:
+        buffer = await this.pdfService.generate('planillaMuestreo', body.data as PlanillaMuestreoDto);
+        filename = 'PlanillaMuestreo.pdf';
         break;
       case TipoDocumento.REPORTE:
         buffer = await this.pdfService.generate('reporte', body.data as ReporteDto);

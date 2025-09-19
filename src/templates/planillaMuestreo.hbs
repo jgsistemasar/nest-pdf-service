@@ -1,10 +1,11 @@
-<!doctype html>  
+<!doctype html> 
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>PROTOCOLO {{protocoloNro}}</title>
+  <title>Planilla de Muestreo</title>
   <style>
-    @page { margin: 5mm 22mm 35mm 15mm; }
+    /* Página y tipografía */
+    @page { margin: 8mm 12mm 16mm 18mm; }
     html, body { margin:0; padding:0; }
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -14,6 +15,7 @@
       print-color-adjust: exact !important;
     }
 
+    /* ===== MARCA DE AGUA (aparece solo si 'firmado' = true) ===== */
     .wm{ position:fixed; inset:0; z-index:0; pointer-events:none; }
     .wm::before{
       content:"";
@@ -21,23 +23,28 @@
       top:18%; left:50%;
       width:70%; height:70%;
       transform: translateX(-50%) rotate(-18deg);
-      opacity:.06;
+      opacity:.06;                          /* intensidad de la marca */
       background-repeat:no-repeat;
       background-position:center;
       background-size:contain;
     }
+    /* Asegura que el resto del contenido quede por encima de la marca */
     .masthead, .hdr, .fields, .fields-2, table, .notes, .footer-fixed{
       position:relative; z-index:1;
     }
 
+    /* ===== CABECERA =====
+       3 columnas:  [línea izq 1fr] [logo auto] [contacto+barra 1fr]
+       Fila 2: líneas horizontales; la derecha pasa POR DEBAJO del contacto+barra. */
     .masthead{
       display:grid;
       grid-template-columns: 1fr auto 1fr;
-      grid-template-rows: auto 2px;
+      grid-template-rows: auto 2px;   /* fila 2 = líneas */
       align-items:center;
       column-gap: 10mm;
       margin: 0 0 3mm 0; 
     }
+    /* Logo centrado en la página (col 2) */
     .mh-logo{
       grid-column: 2; grid-row: 1;
       width: 36mm; height: 20mm;
@@ -45,22 +52,30 @@
       justify-self:center;
     }
     .mh-logo img{ max-height:20mm; max-width:36mm; object-fit:contain; }
+
+    /* Bloque contacto + barra (col 3), anclado al borde derecho */
     .mh-right{
       grid-column: 3; grid-row: 1;
       display:flex; align-items:flex-start; justify-content:flex-end;
-      gap: 2mm;
-      justify-self: end;
+      gap: 2mm;                 /* acercar/alejar contacto a la barra (0–3mm) */
+      justify-self: end;        /* pega todo al borde derecho de la página */
     }
-    .mh-contact{ text-align: right; line-height: 1.25; font-size: 12px; color:#000; white-space: nowrap; }
+    .mh-contact{
+      text-align: right; line-height: 1.25; font-size: 12px; color:#000; white-space: nowrap;
+    }
     .mh-bar{ width:4px; height:22mm; background:#781719; align-self:stretch; }
+
+    /* Líneas horizontales (fila 2): izquierda en col 1, derecha en col 3 (pasa debajo del contacto+barra) */
     .mh-leftline, .mh-rightline{ height: 1px; background:#6f6f6f; }
     .mh-leftline  { grid-column: 1; grid-row: 2; }
     .mh-rightline { grid-column: 3; grid-row: 2; }
 
+    /* ===== Título + nro a la derecha (título centrado real) ===== */
     .hdr { display:grid; grid-template-columns: 1fr auto 1fr; align-items:end; margin-bottom: 6mm; }
     .hdr-title { grid-column:2; text-align:center; font-weight:700; text-decoration:underline; font-size:20px; }
     .hdr-meta  { grid-column:3; font-size:12px; white-space:nowrap; justify-self:end; }
 
+    /* ===== Campos en columna ===== */
     .fields { margin-top:2mm; margin-bottom:4mm; border-bottom:1px solid #000; padding-bottom:2mm; }
     .row { display:grid; grid-template-columns: 32mm 1fr; column-gap:4mm; align-items:baseline; line-height:1.25; margin-bottom:1.5mm; }
     .lbl { font-weight:700; }
@@ -69,34 +84,40 @@
     .fields-2 { margin-top:4mm; margin-bottom:6mm; }
     .row-2 { display:grid; grid-template-columns:32mm 1fr; column-gap:4mm; align-items:baseline; line-height:1.25; margin-bottom:1.5mm; }
 
+    /* ===== Texto de método ===== */
     .assay-title { font-weight:700; margin: 2mm 0 1mm 0; }
     .assay-desc  { margin-bottom: 2mm; }
 
+    /* ===== Tabla ===== */
     table { width:100%; border-collapse:collapse; font-size:12px; }
     thead th { border:none solid #000; padding:2.5mm 2mm; text-align:center; font-weight:700; background:#f0ca6b; color:#000; }
     tbody td { border:none solid #000; padding:2.5mm 2mm; text-align:center; vertical-align:middle; }
     .left { text-align:left; }
 
+    /* ===== Notas debajo de la grilla ===== */
     .notes { margin-top: 6mm; }
     .note  { margin-bottom: 2.5mm; text-align: justify; white-space: pre-wrap; }
 
+    /* ===== Espaciador para pie ===== */
     .footer-spacer { height: 18mm; }
 
+    /* ===== PIE ===== */
     .footer-fixed { position: fixed; left:0; right:0; bottom:4mm; z-index:10; color:#000; }
 
+    /* Panel con borde superior gris y barra roja a la izquierda (rodean el texto) */
     .footer-box{
       position: relative;
-      border-top: 1px solid #6f6f6f;
-      padding: 2mm 0 0 6mm;
+      border-top: 1px solid #6f6f6f;     /* línea gris arriba */
+      padding: 2mm 0 0 6mm;              /* deja lugar para la barra y aire al texto */
     }
     .footer-box::before{
       content: "";
       position: absolute;
       left: 0;
-      top: -1px;
+      top: -1px;                         /* cubre el inicio de la línea gris */
       bottom: 0;
-      width: 4mm;
-      background: #781719;
+      width: 4mm;                        /* grosor de la barra */
+      background: #781719;               /* rojo */
     }
 
     .foot-text   { font-size:12px; line-height:1.35; }
@@ -106,20 +127,25 @@
     .page-num    { text-align:center; margin-top: 3mm; font-size:12px; }
   </style>
 
+  {{!-- Si viene 'firmado', seteamos la imagen de la marca de agua --}}
   {{#if firmado}}
     <style>
-      .wm::before{ background-image: url('{{asset "tilde-mostaza-solo.png"}}'); }
+      .wm::before{
+        background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNdfIL1xaxlZxdR6fhwvRda6-ZbOm9mVjCJg&s");
+      }
     </style>
   {{/if}}
 </head>
-<body {{#if firmado}}class="wm"{{/if}}>
+<body>
 
+  {{!-- Marca de agua condicional --}}
+  {{#if firmado}}<div class="wm"></div>{{/if}}
+
+  <!-- CABECERA -->
   <div class="masthead">
     <div class="mh-leftline"></div>
 
-    <div class="mh-logo">
-      <img src="{{asset 'logo-jla.png'}}" alt="Logo">
-    </div>
+    <div class="mh-logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNdfIL1xaxlZxdR6fhwvRda6-ZbOm9mVjCJg&s" alt="Logo"></div>
 
     <div class="mh-right">
       <div class="mh-contact">
@@ -135,12 +161,14 @@
     <div class="mh-rightline"></div>
   </div>
 
+  <!-- Título + nro -->
   <div class="hdr">
     <div></div>
-    <div class="hdr-title">PROTOCOLO</div>
+    <div class="hdr-title">Planilla de Muestreo</div>
     <div class="hdr-meta">Protocolo Nro: {{protocoloNro}}</div>
   </div>
 
+  <!-- Campos -->
   <div class="fields">
     <div class="row"><div class="lbl">Sr./es de:</div><div class="val">{{srDe}}</div></div>
     <div class="row"><div class="lbl">Domicilio:</div><div class="val">{{domicilio}}</div></div>
@@ -149,6 +177,7 @@
     <div class="row"><div class="lbl">Fecha de emisión:</div><div class="val">{{formatDate fechaEmision}}</div></div>
   </div>
 
+  {{!-- Lotes (minúscula según tu body) --}}
   {{#if dsProtocoloLotes}}
     {{#each dsProtocoloLotes}}
       <div class="fields-2">
@@ -161,64 +190,13 @@
     {{/each}}
   {{/if}}
 
-  {{#if dsProtocoloLotesDetalleAFLA}}
-    {{#with (lookup dsProtocoloLotesDetalleAFLA 0) as |afla0|}}
-      {{#if afla0.descripcion}}<div class="assay-title">{{afla0.descripcion}}</div>{{/if}}
-      {{#if afla0.adicional}}<div class="assay-desc">{{afla0.adicional}}</div>{{/if}}
-    {{/with}}
-  {{/if}}
 
-  <table>
-    <thead>
-      <tr>
-        <th class="left">Lote:</th>
-        <th>Fecha de análisis:</th>
-        <th>Fracción</th>
-        <th>G2</th>
-        <th>G1</th>
-        <th>B2</th>
-        <th>B1</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#if dsProtocoloLotes}}
-        {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
-          {{#if ../dsProtocoloLotesDetalleAFLA.length}}
-            {{#each ../dsProtocoloLotesDetalleAFLA}}
-              <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
-                {{#if @first}}
-                  <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
-                    {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
-                  </td>
-                  <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
-                    {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
-                  </td>
-                {{/if}}
-                <td>{{fraccion}}</td>
-                <td>{{aflaG2}}</td>
-                <td>{{aflaG1}}</td>
-                <td>{{aflaB2}}</td>
-                <td>{{aflaB1}}</td>
-                <td>{{aflaTotal}}</td>
-              </tr>
-            {{/each}}
-          {{/if}}
-        {{/with}}
-      {{/if}}
-    </tbody>
-  </table>
 
-  <div class="notes">
-    {{#if dsProtocoloNotas}}
-      {{#each dsProtocoloNotas}}
-        {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
-      {{/each}}
-    {{/if}}
-  </div>
+
 
   <div class="footer-spacer"></div>
 
+  <!-- PIE (borde superior gris + barra roja izquierda rodeando el texto) -->
   <div class="footer-fixed">
     <div class="footer-box">
       <div class="foot-text">
@@ -237,29 +215,6 @@
         El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre
         AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
       </div>
-
-      {{#if @root.duplicado}}
-        <div class="foot-center">
-          <div class="foot-strong">COPIA INFORMATIVA</div>
-          <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
-          <div>SENASA en cumplimiento de la resolución 436/02</div>
-        </div>
-        <div class="foot-dup">DUPLICADO</div>
-      {{else}}
-        {{#if @root.dsProtocolo}}
-          {{#with (lookup @root.dsProtocolo 0) as |p0|}}
-            {{#if p0.Duplicado}}
-              <div class="foot-center">
-                <div class="foot-strong">COPIA INFORMATIVA</div>
-                <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
-                <div>SENASA en cumplimiento de la resolución 436/02</div>
-              </div>
-              <div class="foot-dup">DUPLICADO</div>
-            {{/if}}
-          {{/with}}
-        {{/if}}
-      {{/if}}
-
       <div class="page-num">Página <span class="pageNumber">1</span> de <span class="totalPages">1</span></div>
     </div>
   </div>

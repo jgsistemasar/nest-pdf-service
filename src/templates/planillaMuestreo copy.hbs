@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>PLANILLA DE MUESTREO {{protocoloNro}}</title>
+  <style>
+    @page { margin: 10mm 12mm 16mm 12mm; }
+    html,body { margin:0; padding:0; }
+    body{ font-family: Arial, Helvetica, sans-serif; font-size:12px; color:#111;
+      -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+    h1{ font-size:20px; text-align:center; margin: 0 0 6mm 0; text-decoration: underline; }
+    .grid-2{ display:grid; grid-template-columns: 32mm 1fr; column-gap:4mm; row-gap:2mm; margin-bottom:6mm; }
+    .lbl{ font-weight:700; }
+    .hr{ height:1px; background:#888; margin:6mm 0; }
+
+    .ds { margin: 5mm 0; }
+    .ds h3{ margin:0 0 2mm 0; font-size:14px; }
+    .muted{ color:#555; }
+
+    table{ width:100%; border-collapse: collapse; margin-top: 2mm; }
+    th, td{ border:1px solid #ccc; padding:4px 6px; text-align:left; vertical-align:top; }
+    th{ background:#f5f5f5; }
+
+    .footer{ position: fixed; left:12mm; right:12mm; bottom:8mm; font-size:10px; color:#444; }
+    .wm::before{
+      content:'';
+      position: fixed; inset: 0;
+      background-repeat:no-repeat; background-position:center; background-size: 70%;
+      opacity: .08; z-index: -1;
+      {{#if firmado}}
+        background-image: url('{{#if marcaAguaUrl}}{{marcaAguaUrl}}{{/if}}');
+      {{/if}}
+    }
+  </style>
+</head>
+<body class="wm">
+
+  <h1>PLANILLA DE MUESTREO</h1>
+
+  <div class="grid-2">
+    <div class="lbl">Protocolo Nro:</div><div>{{protocoloNro}}</div>
+    <div class="lbl">Sr./es de:</div><div>{{srDe}}</div>
+    <div class="lbl">Domicilio:</div><div>{{domicilio}}</div>
+    <div class="lbl">Atención:</div><div>{{atencion}}</div>
+    <div class="lbl">De:</div><div>{{de}}</div>
+    <div class="lbl">Fecha de emisión:</div><div>{{fechaEmision}}</div>
+
+    <div class="lbl">Envases:</div><div>{{envases}}</div>
+    <div class="lbl">Producto:</div><div>{{producto}}</div>
+    <div class="lbl">Planta Procesadora:</div><div>{{plantaProcesadora}}</div>
+    <div class="lbl">Muestra:</div><div>{{muestra}}</div>
+    <div class="lbl">Fecha de muestreo:</div><div>{{fechaMuestreo}}</div>
+  </div>
+
+  <div class="hr"></div>
+
+  {{!-- === DATASETS: conteo y preview del primer item === --}}
+  <div class="ds">
+    <h3>DSPlanillaDeMuestreo <span class="muted">({{#if dsPlanillaDeMuestreo}}{{dsPlanillaDeMuestreo.length}}{{else}}0{{/if}})</span></h3>
+    {{#if dsPlanillaDeMuestreo}}
+      {{#each dsPlanillaDeMuestreo}}
+        {{#if @first}}
+          <table>
+            <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+            <tbody>
+              {{#each this}} <tr><td>{{@key}}</td><td>{{this}}</td></tr> {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      {{/each}}
+    {{else}}<div class="muted">Sin datos</div>{{/if}}
+  </div>
+
+  <div class="ds">
+    <h3>DSPlanillaMuestreoInspectores <span class="muted">({{#if dsPlanillaMuestreoInspectores}}{{dsPlanillaMuestreoInspectores.length}}{{else}}0{{/if}})</span></h3>
+    {{#if dsPlanillaMuestreoInspectores}}
+      {{#each dsPlanillaMuestreoInspectores}}
+        {{#if @first}}
+          <table>
+            <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+            <tbody>
+              {{#each this}} <tr><td>{{@key}}</td><td>{{this}}</td></tr> {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      {{/each}}
+    {{else}}<div class="muted">Sin datos</div>{{/if}}
+  </div>
+
+  <div class="ds">
+    <h3>DSPlanillaMuestreoAyudantes <span class="muted">({{#if dsPlanillaMuestreoAyudantes}}{{dsPlanillaMuestreoAyudantes.length}}{{else}}0{{/if}})</span></h3>
+    {{#if dsPlanillaMuestreoAyudantes}}
+      {{#each dsPlanillaMuestreoAyudantes}}
+        {{#if @first}}
+          <table>
+            <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+            <tbody>
+              {{#each this}} <tr><td>{{@key}}</td><td>{{this}}</td></tr> {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      {{/each}}
+    {{else}}<div class="muted">Sin datos</div>{{/if}}
+  </div>
+
+  <div class="ds">
+    <h3>DSLote <span class="muted">({{#if dsLote}}{{dsLote.length}}{{else}}0{{/if}})</span></h3>
+    {{#if dsLote}}
+      {{#each dsLote}}
+        {{#if @first}}
+          <table>
+            <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+            <tbody>
+              {{#each this}} <tr><td>{{@key}}</td><td>{{this}}</td></tr> {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      {{/each}}
+    {{else}}<div class="muted">Sin datos</div>{{/if}}
+  </div>
+
+  <div class="ds">
+    <h3>DSProtocolo <span class="muted">({{#if dsProtocolo}}{{dsProtocolo.length}}{{else}}0{{/if}})</span></h3>
+    {{#if dsProtocolo}}
+      {{#each dsProtocolo}}
+        {{#if @first}}
+          <table>
+            <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+            <tbody>
+              {{#each this}} <tr><td>{{@key}}</td><td>{{this}}</td></tr> {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      {{/each}}
+    {{else}}<div class="muted">Sin datos</div>{{/if}}
+  </div>
+
+  <div class="ds">
+    <h3>DSElementosMuestreo <span class="muted">({{#if dsElementosMuestreo}}{{dsElementosMuestreo.length}}{{else}}0{{/if}})</span></h3>
+    {{#if dsElementosMuestreo}}
+      {{#each dsElementosMuestreo}}
+        {{#if @first}}
+          <table>
+            <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+            <tbody>
+              {{#each this}} <tr><td>{{@key}}</td><td>{{this}}</td></tr> {{/each}}
+            </tbody>
+          </table>
+        {{/if}}
+      {{/each}}
+    {{else}}<div class="muted">Sin datos</div>{{/if}}
+  </div>
+
+  <div class="footer">
+    <div>Validación e2e — {{fechaEmision}}</div>
+  </div>
+</body>
+</html>
