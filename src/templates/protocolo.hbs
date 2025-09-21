@@ -33,7 +33,7 @@
             width:70%;
             height:70%;
             transform: translateX(-50%) rotate(-18deg);
-            opacity:.06;
+            opacity: 0.20;
             background-repeat:no-repeat;
             background-position:center;
             background-size:contain;
@@ -50,6 +50,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            opacity: .75;  
         }
         
         .vertical-left-text {
@@ -62,23 +63,29 @@
             white-space: nowrap;
         }
         
-        .vertical-right {
+        .vertical-right{
             position: fixed;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 20mm;
+            right: 2mm;          /* pequeño margen del borde */
+            top: 12mm;           /* deja libre la cabecera */
+            bottom: 12mm;        /* deja libre el pie */
+            width: 20mm;         /* carril derecho */
             z-index: 5;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        .vertical-right img {
-            max-width: 18mm;
-            height: auto;
+            }
+
+        .vertical-right img{
+            display: block;
+            height: 18mm;        /* controla el grosor final tras la rotación */
+            width: auto;
             transform: rotate(90deg);
-        }
+            transform-origin: center center;
+            image-rendering: -webkit-optimize-contrast; /* mejora nitidez en Chrome/Puppeteer */
+            position: relative;
+            top: -55mm;     /* valor negativo = sube la imagen */
+            opacity: .35;    /* ajusta a gusto: .15, .25, .5, etc. */
+            }
         
         /* Contenido principal con margen para los elementos verticales */
         .main-content {
@@ -111,16 +118,16 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 60mm;
-            height: 30mm;
+            width: 80mm;
+            height: 50mm;
             display:flex;
             align-items:center;
             justify-content:center;
             z-index: 0;
         }
         .mh-logo img{
-            max-height:30mm;
-            max-width:60mm;
+            max-height:50mm;
+            max-width:80mm;
             object-fit:contain;
         }
         
@@ -388,8 +395,8 @@
         <table>
             <thead>
                 <tr>
-                    <th class="left">Lote:</th>
-                    <th>Fecha de análisis:</th>
+                    <th class="left">Lote</th>
+                    <th>Fecha de análisis</th>
                     <th>Fracción</th>
                     <th>G2</th>
                     <th>G1</th>
