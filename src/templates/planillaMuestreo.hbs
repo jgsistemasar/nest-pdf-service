@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>Planilla de Muestreo</title>
+    <title>PROTOCOLO {{protocoloNro}}</title>
     <style>
         @page {
             margin: 5mm -2mm 35mm -2mm;
@@ -156,11 +156,11 @@
             transform: translateY(-1px);
         }
         .mh-bar{
-            width: 8px;
+            width:4px;
             height: 62.5px;
             background:#781719;
             position: absolute;
-            right: 1mm;
+            right: -2mm;
             bottom: 0;
         }
         .mh-leftline, .mh-rightline{
@@ -315,15 +315,13 @@
             font-size:12px;
         }
     </style>
-    {{#if firmado}}
     <style>
         .wm::before{
             background-image: url('{{asset "tilde-mostaza-solo.png"}}');
         }
     </style>
-    {{/if}}
 </head>
-<body {{#if firmado}}class="wm"{{/if}}>
+<body class="wm">
     <!-- Elementos verticales fijos -->
     <div class="vertical-left">
         <div class="vertical-left-text">
@@ -361,37 +359,39 @@
 
         <div class="hdr">
             <div></div>
-            <div class="hdr-title">PLANILLA DE MUESTREO</div>
+            <div class="hdr-title">PROTOCOLO</div>
             <div class="hdr-meta">Protocolo Nro: {{protocoloNro}}</div>
         </div>
+            <div class="hdr-title">Planilla de Muestreo</div>
+        <div>
 
-        
-        {{#if dsProtocoloLotes}}
-        {{#each dsProtocoloLotes}}
+        </div>
+       {{#if dsPlanillaDeMuestreo}}
+        {{#each dsPlanillaDeMuestreo}}
         <div class="fields">
-            <div class="row"><div class="lbl">Exportador</div><div class="val">{{this.exportador}}</div></div>
-            <div class="row"><div class="lbl">Planta Procesadora:</div><div class="val">{{this.planta}}</div></div>
-            <div class="row"><div class="lbl">Lugar de Muestreo:</div><div class="val">{{this.lugarMuestreo}}</div></div>
-            <div class="row"><div class="lbl">Lote:</div><div class="val">{{this.lote}}</div></div>
-            <div class="row"><div class="lbl">Fecha de emisión:</div><div class="val">{{formatDate fechaEmision}}</div></div>
+            <div class="row"><div class="lbl">Fecha:</div><div class="val">{{formatDate Fecha}}</div></div>
+            <div class="row"><div class="lbl">Exportador:</div><div class="val">{{this.Exportador}}</div></div>
+            <div class="row"><div class="lbl">Planta Procesadora:</div><div class="val">{{this.Planta}}</div></div>
+            <div class="row"><div class="lbl">Lugar de muestreo:</div><div class="val">{{this.LugarMuestreo}}</div></div>
+            <div class="row"><div class="lbl">Lote:</div><div class="val">{{Lote.Lote}}</div></div>
+            <div class="row"><div class="lbl">Muestra:</div><div class="val">{{Lote.Muestra}}</div></div>
+            <div class="row"><div class="lbl">Producto y subproducto:</div><div class="val">{{Lote.Producto}}</div></div>
+            <div class="row"><div class="lbl">Cosecha:</div><div class="val">{{Lote.Cosecha}}</div></div>
+            <div class="row"><div class="lbl">Tipo de envase:</div><div class="val">{{Lote.Envase}}</div></div>
+            <div class="row"><div class="lbl">Cantidad de envase:</div><div class="val">{{Lote.Cantidad}}</div></div>
+            <div class="row"><div class="lbl">Tipo de muestreo:</div><div class="val">{{Lote.TipoMuestreo}}</div></div>
+            <div class="row"><div class="lbl">Observaciones:</div><div class="val">{{Lote.Observaciones}}</div></div>
         </div>
         {{/each}}
         {{/if}}
 
-
-        {{#if dsProtocoloLotes}}
-        {{#each dsProtocoloLotes}}
+        {{#if dsPlanillaMuestreoInspectores}}
+        {{#each dsPlanillaMuestreoInspectores}}
         <div class="fields-2">
-            <div class="row-2"><div class="lbl">{{this.cantidadEnvaseLabel}}</div><div class="val">{{this.cantidadEnvaseValue}}</div></div>
-            <div class="row-2"><div class="lbl">{{this.productoLabel}}</div><div class="val">{{this.productoValue}}</div></div>
-            <div class="row-2"><div class="lbl">{{this.lugarDeProcesadoLabel}}</div><div class="val">{{this.lugarDeProcesadoValue}}</div></div>
-            <div class="row-2"><div class="lbl">{{this.muestralabel}}</div><div class="val">{{this.muestraValue}}</div></div>
-            <div class="row-2"><div class="lbl">{{this.fechaMuestreoLabel}}</div><div class="val">{{this.fechaMuestreoValue}}</div></div>
+            <div class="row-2"><div class="lbl">Inspector</div><div class="val">{{this.Apellido}},{{this.Nombre}}</div></div>
         </div>
         {{/each}}
         {{/if}}
-
-      
 
         <div class="footer-spacer"></div>
     </div>
@@ -412,7 +412,6 @@
                 </span><br/>
                 El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
             </div>
-          
             <div class="page-num">Página <span class="pageNumber">1</span> de <span class="totalPages">1</span></div>
         </div>
     </div>
