@@ -5,7 +5,7 @@
     <title>PROTOCOLO {{protocoloNro}}</title>
     <style>
         @page {
-            margin: 5mm -2mm 35mm -2mm;
+            margin: 5mm -4mm 35mm -2mm;
         }
         html, body {
             margin:0;
@@ -13,7 +13,7 @@
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             color:#000;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -77,7 +77,7 @@
 
         .vertical-right img{
             display: block;
-            height: 18mm;        /* controla el grosor final tras la rotación */
+            height: 12mm;        /* controla el grosor final tras la rotación */
             width: auto;
             transform: rotate(90deg);
             transform-origin: center center;
@@ -193,7 +193,7 @@
         }
         .hdr-meta {
             grid-column:3;
-            font-size:12px;
+            font-size:14px;
             white-space:nowrap;
             justify-self:end;
         }
@@ -293,7 +293,7 @@
             background: #781719;
         }
         .foot-text {
-            font-size:12px;
+            font-size:11px;
             line-height:1.35;
         }
         .foot-strong {
@@ -385,6 +385,14 @@
         {{/each}}
         {{/if}}
 
+        <div class="notes">
+            {{#if dsProtocoloNotasPreDetalle}}
+            {{#each dsProtocoloNotasPreDetalle}}
+            {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
+            {{/each}}
+            {{/if}}
+        </div>
+
         {{#if dsProtocoloLotesDetalleAFLA}}
         {{#with (lookup dsProtocoloLotesDetalleAFLA 0) as |afla0|}}
         {{#if afla0.descripcion}}<div class="assay-title">{{afla0.descripcion}}</div>{{/if}}
@@ -448,15 +456,13 @@
         <div class="footer-box">
             <div class="foot-text">
                 <span class="foot-strong">
-                    LABORATORIO N°: {{#if codigoTipoLaboratorio}}
-                        {{codigoTipoLaboratorio}}
-                    {{else}}
+                    LABORATORIO N°: 
                         {{#if dsProtocolo}}
                         {{#with (lookup dsProtocolo 0)}}
-                        {{codigoTipoLaboratorio}}
+                        {{codigoTipoLaboratorio}} - 
+                        {{numeroSenasa}}
                         {{/with}}
                         {{/if}}
-                    {{/if}}
                 </span><br/>
                 El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
             </div>
