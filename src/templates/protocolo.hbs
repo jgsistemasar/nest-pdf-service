@@ -5,38 +5,40 @@
     <title>PROTOCOLO {{protocoloNro}}</title>
     <style>
         @page {
-            margin: 5mm -4mm 35mm -2mm;
+            margin: 0;
         }
         html, body {
-            margin:0;
-            padding:0;
+            margin: 0;
+            padding: 0;
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
-            color:#000;
+            color: #000;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
             position: relative;
         }
-        .wm{
-            position:fixed;
-            inset:0;
-            z-index:0;
-            pointer-events:none;
+        
+        .wm {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
         }
-        .wm::before{
-            content:"";
-            position:absolute;
-            top:18%;
-            left:50%;
-            width:70%;
-            height:70%;
+        
+        .wm::before {
+            content: "";
+            position: absolute;
+            top: 18%;
+            left: 50%;
+            width: 70%;
+            height: 70%;
             transform: translateX(-50%) rotate(-18deg);
             opacity: 0.20;
-            background-repeat:no-repeat;
-            background-position:center;
-            background-size:contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
         }
         
         /* Elementos verticales fijos */
@@ -63,261 +65,170 @@
             white-space: nowrap;
         }
         
-        .vertical-right{
+        .vertical-right {
             position: fixed;
-            right: 2mm;          /* pequeño margen del borde */
-            top: 12mm;           /* deja libre la cabecera */
-            bottom: 12mm;        /* deja libre el pie */
-            width: 20mm;         /* carril derecho */
+            right: 2mm;
+            top: 12mm;
+            bottom: 12mm;
+            width: 20mm;
             z-index: 5;
             display: flex;
             align-items: center;
             justify-content: center;
-            }
+        }
 
-        .vertical-right img{
+        .vertical-right img {
             display: block;
-            height: 12mm;        /* controla el grosor final tras la rotación */
+            height: 12mm;
             width: auto;
             transform: rotate(90deg);
             transform-origin: center center;
-            image-rendering: -webkit-optimize-contrast; /* mejora nitidez en Chrome/Puppeteer */
+            image-rendering: -webkit-optimize-contrast;
             position: relative;
-            top: -55mm;     /* valor negativo = sube la imagen */
-            opacity: .35;    /* ajusta a gusto: .15, .25, .5, etc. */
-            }
+            top: -55mm;
+            opacity: .35;
+        }
         
-        /* Contenido principal con margen para los elementos verticales */
+        /* Contenido principal con márgenes ajustados */
         .main-content {
-            margin: 0 25mm 0 20mm;
+            margin: 30mm 25mm 35mm 20mm; /* Ajustado para evitar colisión */
             position: relative;
             z-index: 1;
+            min-height: calc(100vh - 65mm); /* Asegurar espacio mínimo */
         }
         
-        .masthead, .hdr, .fields, .fields-2, table, .notes, .footer-fixed{
-            position:relative;
-            z-index:1;
-        }
-        .masthead{
-            display:flex;
-            align-items:flex-start;
-            justify-content:space-between;
-            position:relative;
-            margin: 0 0 3mm 0;
-            height: 30mm;
-        }
-        
-        .mh-left-section{
-            flex: 1;
-            position: relative;
-            height: 100%;
-        }
-        
-        .mh-logo{
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 80mm;
-            height: 50mm;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            z-index: 0;
-        }
-        .mh-logo img{
-            max-height:50mm;
-            max-width:80mm;
-            object-fit:contain;
-        }
-        
-        .mh-right-section{
-            flex: 1;
-            height: 100%;
-            position: relative;
-        }
-        
-        .mh-right{
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-100%);
-            display:flex;
-            align-items:flex-end;
-            justify-content:flex-end;
-            gap: 2mm;
-        }
-        .mh-contact{
-            text-align: right;
-            line-height: 1.25;
-            font-size: 9px;
-            color:#000;
-            white-space: nowrap;
-            transform: translateY(-1px);
-        }
-        .mh-bar{
-            width:4px;
-            height: 62.5px;
-            background:#781719;
-            position: absolute;
-            right: -2mm;
-            bottom: 0;
-        }
-        .mh-leftline, .mh-rightline{
-            height: 1px;
-            background:#6f6f6f;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .mh-leftline {
-            left: 0;
-            right: calc(50% + 25mm);
-        }
-        .mh-rightline {
-            left: calc(50% + 25mm);
-            right: 0mm;
-        }
         .hdr {
-            display:grid;
+            display: grid;
             grid-template-columns: 1fr auto 1fr;
-            align-items:end;
+            align-items: end;
             margin-bottom: 6mm;
         }
+        
         .hdr-title {
-            grid-column:2;
-            text-align:center;
-            font-weight:700;
-            text-decoration:underline;
-            font-size:20px;
+            grid-column: 2;
+            text-align: center;
+            font-weight: 700;
+            text-decoration: underline;
+            font-size: 20px;
         }
+        
         .hdr-meta {
-            grid-column:3;
-            font-size:14px;
-            white-space:nowrap;
-            justify-self:end;
+            grid-column: 3;
+            font-size: 14px;
+            white-space: nowrap;
+            justify-self: end;
         }
+        
         .fields {
-            margin-top:2mm;
-            margin-bottom:4mm;
-            border-bottom:1px solid #000;
-            padding-bottom:2mm;
+            margin-top: 2mm;
+            margin-bottom: 4mm;
+            border-bottom: 1px solid #000;
+            padding-bottom: 2mm;
         }
+        
         .row {
-            display:grid;
+            display: grid;
             grid-template-columns: 32mm 1fr;
-            column-gap:4mm;
-            align-items:baseline;
-            line-height:1.25;
-            margin-bottom:1.5mm;
+            column-gap: 4mm;
+            align-items: baseline;
+            line-height: 1.25;
+            margin-bottom: 1.5mm;
         }
+        
         .lbl {
-            font-weight:700;
+            font-weight: 700;
         }
+        
         .val {
             word-break: break-word;
-            overflow-wrap:anywhere;
+            overflow-wrap: anywhere;
         }
+        
         .fields-2 {
-            margin-top:4mm;
-            margin-bottom:6mm;
+            margin-top: 4mm;
+            margin-bottom: 6mm;
         }
+        
         .row-2 {
-            display:grid;
-            grid-template-columns:32mm 1fr;
-            column-gap:4mm;
-            align-items:baseline;
-            line-height:1.25;
-            margin-bottom:1.5mm;
+            display: grid;
+            grid-template-columns: 32mm 1fr;
+            column-gap: 4mm;
+            align-items: baseline;
+            line-height: 1.25;
+            margin-bottom: 1.5mm;
         }
+        
         .assay-title {
-            font-weight:700;
+            font-weight: 700;
             margin: 2mm 0 1mm 0;
         }
+        
         .assay-desc {
             margin-bottom: 2mm;
         }
+        
         table {
-            width:100%;
-            border-collapse:collapse;
-            font-size:12px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            page-break-inside: auto;
         }
+        
         thead th {
-            border:none solid #000;
-            padding:2.5mm 2mm;
-            text-align:center;
-            font-weight:700;
-            background:#f0ca6b;
-            color:#000;
+            border: none solid #000;
+            padding: 2.5mm 2mm;
+            text-align: center;
+            font-weight: 700;
+            background: #f0ca6b;
+            color: #000;
         }
+        
         tbody td {
-            border:none solid #000;
-            padding:2.5mm 2mm;
-            text-align:center;
-            vertical-align:middle;
+            border: none solid #000;
+            padding: 2.5mm 2mm;
+            text-align: center;
+            vertical-align: middle;
         }
+        
         .left {
-            text-align:left;
+            text-align: left;
         }
+        
         .notes {
             margin-top: 6mm;
+            margin-bottom: 10mm; /* Espacio extra antes del footer */
+            page-break-inside: avoid; /* Evitar corte de notas */
         }
+        
         .note {
             margin-bottom: 2.5mm;
             text-align: justify;
             white-space: pre-wrap;
+            orphans: 3; /* Mínimo 3 líneas al final de página */
+            widows: 3;  /* Mínimo 3 líneas al inicio de página */
         }
+
+        /* Control de saltos de página */
+        .page-break-before {
+            page-break-before: always;
+        }
+
+        .page-break-after {
+            page-break-after: always;
+        }
+
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+
+        /* Espaciador para evitar colisión con footer */
         .footer-spacer {
-            height: 18mm;
-        }
-        .footer-fixed {
-            position: fixed;
-            left:20mm;
-            right:25mm;
-            bottom:4mm;
-            z-index:10;
-            color:#000;
-        }
-        .footer-box{
-            position: relative;
-            border-top: 1px solid #6f6f6f;
-            padding: 2mm 0 0 6mm;
-        }
-        .footer-box::before{
-            content: "";
-            position: absolute;
-            left: 0;
-            top: -1px;
-            bottom: 0;
-            width: 4mm;
-            background: #781719;
-        }
-        .foot-text {
-            font-size:11px;
-            line-height:1.35;
-        }
-        .foot-strong {
-            font-weight:700;
-        }
-        .foot-center {
-            text-align:center;
-            margin-top: 2mm;
-        }
-        .foot-dup {
-            font-weight:700;
-            text-transform:uppercase;
-            text-align:center;
-            margin-top: 3mm;
-        }
-        .page-num {
-            text-align:center;
-            margin-top: 3mm;
-            font-size:12px;
+            height: 15mm;
         }
     </style>
     {{#if firmado}}
     <style>
-        .wm::before{
+        .wm::before {
             background-image: url('{{asset "tilde-mostaza-solo.png"}}');
         }
     </style>
@@ -327,38 +238,17 @@
     <!-- Elementos verticales fijos -->
     <div class="vertical-left">
         <div class="vertical-left-text">
-                <div>Ninguna parte de este documento puede ser reproducida, de ninguna forma o por ningún medio, sin previa autorización escrita de JLA</div>        
-                <div>No part of this certificate can be reproduced in any form or by any means, whithout permission in written from JLA.</div>
+            <div>Ninguna parte de este documento puede ser reproducida, de ninguna forma o por ningún medio, sin previa autorización escrita de JLA</div>        
+            <div>No part of this certificate can be reproduced in any form or by any means, whithout permission in written from JLA.</div>
         </div>
     </div>
     
     <div class="vertical-right">
         <img src="{{asset 'senasa.png'}}" alt="SENASA">
     </div>
-    
+
     <!-- Contenido principal -->
     <div class="main-content">
-        <div class="masthead">
-            <div class="mh-left-section"></div>
-            <div class="mh-logo">
-                <img src="{{asset 'logo-jla.png'}}" alt="Logo">
-            </div>
-            <div class="mh-right-section">
-                <div class="mh-right">
-                    <div class="mh-contact">
-                        <div>www.jla.com.ar</div>
-                        <div>info@jla.com.ar</div>
-                        <div>Bv. Italia N° 1150</div>
-                        <div>(X5809BAS) General Cabrera - Córdoba - Argentina</div>
-                        <div>Tel. 54 358 4931340 / Fax 54 358 4931271</div>
-                    </div>
-                    <div class="mh-bar"></div>
-                </div>
-            </div>
-            <div class="mh-leftline"></div>
-            <div class="mh-rightline"></div>
-        </div>
-
         <div class="hdr">
             <div></div>
             <div class="hdr-title">PROTOCOLO</div>
@@ -400,46 +290,48 @@
         {{/with}}
         {{/if}}
 
-        <table>
-            <thead>
-                <tr>
-                    <th class="left">Lote</th>
-                    <th>Fecha de análisis</th>
-                    <th>Fracción</th>
-                    <th>G2</th>
-                    <th>G1</th>
-                    <th>B2</th>
-                    <th>B1</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#if dsProtocoloLotes}}
-                {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
-                {{#if ../dsProtocoloLotesDetalleAFLA.length}}
-                {{#each ../dsProtocoloLotesDetalleAFLA}}
-                <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
-                    {{#if @first}}
-                    <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
-                        {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
-                    </td>
-                    <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
-                        {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
-                    </td>
+        <div class="avoid-break">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="left">Lote</th>
+                        <th>Fecha de análisis</th>
+                        <th>Fracción</th>
+                        <th>G2</th>
+                        <th>G1</th>
+                        <th>B2</th>
+                        <th>B1</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#if dsProtocoloLotes}}
+                    {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
+                    {{#if ../dsProtocoloLotesDetalleAFLA.length}}
+                    {{#each ../dsProtocoloLotesDetalleAFLA}}
+                    <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
+                        {{#if @first}}
+                        <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
+                            {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
+                        </td>
+                        <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
+                            {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
+                        </td>
+                        {{/if}}
+                        <td>{{fraccion}}</td>
+                        <td>{{aflaG2}}</td>
+                        <td>{{aflaG1}}</td>
+                        <td>{{aflaB2}}</td>
+                        <td>{{aflaB1}}</td>
+                        <td>{{aflaTotal}}</td>
+                    </tr>
+                    {{/each}}
                     {{/if}}
-                    <td>{{fraccion}}</td>
-                    <td>{{aflaG2}}</td>
-                    <td>{{aflaG1}}</td>
-                    <td>{{aflaB2}}</td>
-                    <td>{{aflaB1}}</td>
-                    <td>{{aflaTotal}}</td>
-                </tr>
-                {{/each}}
-                {{/if}}
-                {{/with}}
-                {{/if}}
-            </tbody>
-        </table>
+                    {{/with}}
+                    {{/if}}
+                </tbody>
+            </table>
+        </div>
 
         <div class="notes">
             {{#if dsProtocoloNotas}}
@@ -449,46 +341,8 @@
             {{/if}}
         </div>
 
+        <!-- Espaciador para evitar colisión con footer -->
         <div class="footer-spacer"></div>
-    </div>
-
-    <div class="footer-fixed">
-        <div class="footer-box">
-            <div class="foot-text">
-                <span class="foot-strong">
-                    LABORATORIO N°: 
-                        {{#if dsProtocolo}}
-                        {{#with (lookup dsProtocolo 0)}}
-                        {{codigoTipoLaboratorio}} - 
-                        {{numeroSenasa}}
-                        {{/with}}
-                        {{/if}}
-                </span><br/>
-                El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
-            </div>
-            {{#if @root.duplicado}}
-            <div class="foot-center">
-                <div class="foot-strong">COPIA INFORMATIVA</div>
-                <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
-                <div>SENASA en cumplimiento de la resolución 436/02</div>
-            </div>
-            <div class="foot-dup">DUPLICADO</div>
-            {{else}}
-            {{#if @root.dsProtocolo}}
-            {{#with (lookup @root.dsProtocolo 0) as |p0|}}
-            {{#if p0.Duplicado}}
-            <div class="foot-center">
-                <div class="foot-strong">COPIA INFORMATIVA</div>
-                <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
-                <div>SENASA en cumplimiento de la resolución 436/02</div>
-            </div>
-            <div class="foot-dup">DUPLICADO</div>
-            {{/if}}
-            {{/with}}
-            {{/if}}
-            {{/if}}
-            <div class="page-num">Página <span class="pageNumber">1</span> de <span class="totalPages">1</span></div>
-        </div>
     </div>
 </body>
 </html>

@@ -1,0 +1,93 @@
+<style>
+  .footer-content {
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #000;
+    margin: 0;
+    padding: 4mm 0 2mm 0; /* Reducir padding */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .footer-box {
+    position: relative;
+    border-top: 1px solid #6f6f6f;
+    padding: 2mm 0 0 6mm;
+  }
+  
+  .footer-box::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -1px;
+    bottom: 0;
+    width: 4mm;
+    background: #781719;
+  }
+  
+  .foot-text {
+    font-size: 10px; /* Reducir tamaño */
+    line-height: 1.25; /* Reducir interlineado */
+  }
+  
+  .foot-strong {
+    font-weight: 700;
+  }
+  
+  .foot-center {
+    text-align: center;
+    margin-top: 1mm; /* Reducir margen */
+  }
+  
+  .foot-dup {
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 2mm; /* Reducir margen */
+  }
+  
+  .page-num {
+    text-align: center;
+    margin-top: 2mm; /* Reducir margen */
+    font-size: 10px;
+  }
+</style>
+
+<div class="footer-content">
+  <div class="footer-box">
+    <div class="foot-text">
+      <span class="foot-strong">
+        LABORATORIO N°: 
+        {{#if dsProtocolo}}
+        {{#with (lookup dsProtocolo 0)}}
+        {{codigoTipoLaboratorio}} - {{numeroSenasa}}
+        {{/with}}
+        {{/if}}
+      </span><br/>
+      El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
+    </div>
+    {{#if duplicado}}
+    <div class="foot-center">
+      <div class="foot-strong">COPIA INFORMATIVA</div>
+      <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
+      <div>SENASA en cumplimiento de la resolución 436/02</div>
+    </div>
+    <div class="foot-dup">DUPLICADO</div>
+    {{else}}
+    {{#if dsProtocolo}}
+    {{#with (lookup dsProtocolo 0) as |p0|}}
+    {{#if p0.duplicado}}
+    <div class="foot-center">
+      <div class="foot-strong">COPIA INFORMATIVA</div>
+      <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
+      <div>SENASA en cumplimiento de la resolución 436/02</div>
+    </div>
+    <div class="foot-dup">DUPLICADO</div>
+    {{/if}}
+    {{/with}}
+    {{/if}}
+    {{/if}}
+    <div class="page-num">Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>
+  </div>
+</div>
