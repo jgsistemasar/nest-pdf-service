@@ -59,7 +59,17 @@ export class PdfService {
     if (!fs.existsSync(filePath)) {
       return ''; // No header template found, return empty
     }
-    return this.compileTemplate(`${templateName}-header`, data);
+    const source = fs.readFileSync(filePath, 'utf8');
+    const globalAssetsDir = path.join(this.templatesDir, 'assets');
+
+    Handlebars.unregisterHelper('asset');
+    Handlebars.registerHelper('asset', (rel: string) => {
+      const abs = path.join(globalAssetsDir, rel || '');
+      return this.toDataUri(abs);
+    });
+
+    const template = Handlebars.compile(source);
+    return template(data);
   }
 
   private compileFooterTemplate(templateName: string, data: any): string {
@@ -67,54 +77,70 @@ export class PdfService {
     if (!fs.existsSync(filePath)) {
       return ''; // No footer template found, return empty
     }
-    return this.compileTemplate(`${templateName}-footer`, data);
+    const source = fs.readFileSync(filePath, 'utf8');
+    const globalAssetsDir = path.join(this.templatesDir, 'assets');
+
+    Handlebars.unregisterHelper('asset');
+    Handlebars.registerHelper('asset', (rel: string) => {
+      const abs = path.join(globalAssetsDir, rel || '');
+      return this.toDataUri(abs);
+    });
+
+    const template = Handlebars.compile(source);
+    return template(data);
   }
 
   async generate(templateName: string, data: any): Promise<Buffer> {
-      const html = this.compileTemplate(templateName, data);
-      const headerHtml = this.compileHeaderTemplate(templateName, data);
-      const footerHtml = this.compileFooterTemplate(templateName, data);
+    const html = this.compileTemplate(templateName, data);
+    const headerHtml = this.compileHeaderTemplate(templateName, data);
+    const footerHtml = this.compileFooterTemplate(templateName, data);
 
-      try {
-        const browser = await puppeteer.launch({
-          headless: true,
-          args: ['--no-sandbox', '--font-render-hinting=medium', '--allow-file-access-from-files']
-        });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: 'networkidle0' });
+    // Inyectar header en los datos
+    const enhancedData = {
+      ...data,
+      _headerTemplate: headerHtml,
+      _hasHeader: !!headerHtml
+    };
 
-        const pdfOptions: any = {
+    const finalHtml = this.compileTemplate(templateName, enhancedData);
+
+    try {
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--font-render-hinting=medium', '--allow-file-access-from-files']
+      });
+      const page = await browser.newPage();
+      await page.setContent(finalHtml, { waitUntil: 'networkidle0' });
+
+      const pdfOptions: any = {
           format: 'A4',
-          width: '8.5in', // Ancho del papel
-          height: '11in', // Alto del papel
           printBackground: true,
-          preferCSSPageSize: false,
           margin: { 
-            top: '15mm' , 
-            bottom: '40mm', // Aumentado para dar más espacio 
+            top: '5mm',
+            bottom: '40mm', // Aumentar de 30mm a 40mm
             left: '0mm', 
             right: '0mm' 
           }
-        };
+      };
 
-        // Agregar header si existe
-        if (headerHtml) {
-          pdfOptions.headerTemplate = headerHtml;
-          pdfOptions.displayHeaderFooter = true;
-        }
-
-        // Agregar footer si existe
-        if (footerHtml) {
-          pdfOptions.footerTemplate = footerHtml;
-          pdfOptions.displayHeaderFooter = true;
-        }
-
-        const pdf = await page.pdf(pdfOptions);
-        await browser.close();
-        return pdf;
-      } catch (err) {
-        console.error(err);
-        throw new InternalServerErrorException('Error generando PDF');
+      // SOLO footerTemplate (se repite automáticamente)
+      if (footerHtml) {
+        pdfOptions.footerTemplate = footerHtml;
+        pdfOptions.displayHeaderFooter = true;
       }
+
+            // HeaderTemplate (se repite automáticamente)
+      if (headerHtml) {
+        pdfOptions.headerTemplate = headerHtml;
+        pdfOptions.displayHeaderFooter = true;
+      }
+
+      const pdf = await page.pdf(pdfOptions);
+      await browser.close();
+      return pdf;
+    } catch (err) {
+      console.error(err);
+      throw new InternalServerErrorException('Error generando PDF');
     }
+  }
 }

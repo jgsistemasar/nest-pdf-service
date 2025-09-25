@@ -5,24 +5,22 @@
     <title>PROTOCOLO {{protocoloNro}}</title>
     <style>
         @page {
-            margin: 15;
+            margin: 0 45 0 0;
+            size: A4;
         }
+        
         html, body {
             margin: 0;
             padding: 0;
-        }
-        body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px;
             color: #000;
             -webkit-print-color-adjust: exact !important;
-            page-break-inside: avoid; /* Evitar corte de notas */
             print-color-adjust: exact !important;
-            position: relative;
         }
         
         .wm {
-            position: fixed;
+            position: absolute; /* NO fixed */
             inset: 0;
             z-index: 0;
             pointer-events: none;
@@ -42,9 +40,9 @@
             background-size: contain;
         }
         
-        /* Elementos verticales fijos */
+        /* Elementos verticales como contenido normal (NO fixed) */
         .vertical-left {
-            position: fixed;
+            position: absolute; /* NO fixed */
             left: 0;
             top: 0;
             bottom: 0;
@@ -67,7 +65,7 @@
         }
         
         .vertical-right {
-            position: fixed;
+            position: absolute; /* NO fixed */
             right: 2mm;
             top: 12mm;
             bottom: 12mm;
@@ -90,12 +88,18 @@
             opacity: .35;
         }
         
-        /* Contenido principal con márgenes ajustados */
+        /* Header integrado */
+        .integrated-header {
+            width: calc(100% - 45mm);
+            margin: 5mm 25mm 5mm 20mm;
+            height: auto;
+        }
+        
+        /* Contenido principal con margen para footer */
         .main-content {
-            margin: 30mm 25mm 35mm 20mm; /* Ajustado para evitar colisión */
+            margin: 0 25mm 40mm 20mm; /* Aumentar bottom margin de 30mm a 40mm */
             position: relative;
             z-index: 1;
-            min-height: calc(100vh - 65mm); /* Asegurar espacio mínimo */
         }
         
         .hdr {
@@ -103,6 +107,7 @@
             grid-template-columns: 1fr auto 1fr;
             align-items: end;
             margin-bottom: 6mm;
+            margin-top: 5mm;
         }
         
         .hdr-title {
@@ -172,7 +177,6 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;
-            page-break-inside: auto;
         }
         
         thead th {
@@ -195,20 +199,24 @@
             text-align: left;
         }
         
+        /* Notas que fluyen correctamente */
         .notes {
             margin-top: 6mm;
-            margin-bottom: 10mm; /* Espacio extra antes del footer */
+            margin-bottom: 6mm;
         }
         
         .note {
             margin-bottom: 2.5mm;
             text-align: justify;
-            page-break-inside: avoid; /* Evitar corte de notas */
+            white-space: pre-wrap;
+            line-height: 1.4;
         }
 
-        /* Espaciador para evitar colisión con footer */
-        .footer-spacer {
-            height: 15mm;
+        /* Contenido adicional para generar múltiples páginas */
+        .extended-notes {
+            margin-top: 10mm;
+            padding: 5mm;
+            border-top: 1px solid #ccc;
         }
     </style>
     {{#if firmado}}
@@ -220,7 +228,14 @@
     {{/if}}
 </head>
 <body {{#if firmado}}class="wm"{{/if}}>
-    <!-- Elementos verticales fijos -->
+    {{#if _hasHeader}}
+    <!-- Header integrado -->
+    <div class="integrated-header">
+        {{{_headerTemplate}}}
+    </div>
+    {{/if}}
+
+    <!-- Elementos verticales (absolutos, no fijos) -->
     <div class="vertical-left">
         <div class="vertical-left-text">
             <div>Ninguna parte de este documento puede ser reproducida, de ninguna forma o por ningún medio, sin previa autorización escrita de JLA</div>        
@@ -232,7 +247,7 @@
         <img src="{{asset 'senasa.png'}}" alt="SENASA">
     </div>
 
-    <!-- Contenido principal -->
+    <!-- Contenido principal que PUEDE fluir -->
     <div class="main-content">
         <div class="hdr">
             <div></div>
@@ -275,48 +290,46 @@
         {{/with}}
         {{/if}}
 
-        <div class="avoid-break">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="left">Lote</th>
-                        <th>Fecha de análisis</th>
-                        <th>Fracción</th>
-                        <th>G2</th>
-                        <th>G1</th>
-                        <th>B2</th>
-                        <th>B1</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#if dsProtocoloLotes}}
-                    {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
-                    {{#if ../dsProtocoloLotesDetalleAFLA.length}}
-                    {{#each ../dsProtocoloLotesDetalleAFLA}}
-                    <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
-                        {{#if @first}}
-                        <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
-                            {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
-                        </td>
-                        <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
-                            {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
-                        </td>
-                        {{/if}}
-                        <td>{{fraccion}}</td>
-                        <td>{{aflaG2}}</td>
-                        <td>{{aflaG1}}</td>
-                        <td>{{aflaB2}}</td>
-                        <td>{{aflaB1}}</td>
-                        <td>{{aflaTotal}}</td>
-                    </tr>
-                    {{/each}}
+        <table>
+            <thead>
+                <tr>
+                    <th class="left">Lote</th>
+                    <th>Fecha de análisis</th>
+                    <th>Fracción</th>
+                    <th>G2</th>
+                    <th>G1</th>
+                    <th>B2</th>
+                    <th>B1</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if dsProtocoloLotes}}
+                {{#with (lookup dsProtocoloLotes 0) as |firstLot|}}
+                {{#if ../dsProtocoloLotesDetalleAFLA.length}}
+                {{#each ../dsProtocoloLotesDetalleAFLA}}
+                <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
+                    {{#if @first}}
+                    <td class="left" rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}" style="background:#fdecc8">
+                        {{#if firstLot.loteValue}}{{firstLot.loteValue}}{{else}}—{{/if}}
+                    </td>
+                    <td rowspan="{{../../dsProtocoloLotesDetalleAFLA.length}}">
+                        {{#if firstLot.fechaAnalisisValue}}{{firstLot.fechaAnalisisValue}}{{/if}}
+                    </td>
                     {{/if}}
-                    {{/with}}
-                    {{/if}}
-                </tbody>
-            </table>
-        </div>
+                    <td>{{fraccion}}</td>
+                    <td>{{aflaG2}}</td>
+                    <td>{{aflaG1}}</td>
+                    <td>{{aflaB2}}</td>
+                    <td>{{aflaB1}}</td>
+                    <td>{{aflaTotal}}</td>
+                </tr>
+                {{/each}}
+                {{/if}}
+                {{/with}}
+                {{/if}}
+            </tbody>
+        </table>
 
         <div class="notes">
             {{#if dsProtocoloNotas}}
@@ -326,8 +339,7 @@
             {{/if}}
         </div>
 
-        <!-- Espaciador para evitar colisión con footer -->
-        <div class="footer-spacer"></div>
+      
     </div>
 </body>
 </html>
