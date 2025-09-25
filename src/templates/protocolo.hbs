@@ -5,7 +5,7 @@
     <title>PROTOCOLO {{protocoloNro}}</title>
     <style>
         @page {
-            margin: 0;
+            margin: 15;
         }
         html, body {
             margin: 0;
@@ -16,6 +16,7 @@
             font-size: 11px;
             color: #000;
             -webkit-print-color-adjust: exact !important;
+            page-break-inside: avoid; /* Evitar corte de notas */
             print-color-adjust: exact !important;
             position: relative;
         }
@@ -197,28 +198,12 @@
         .notes {
             margin-top: 6mm;
             margin-bottom: 10mm; /* Espacio extra antes del footer */
-            page-break-inside: avoid; /* Evitar corte de notas */
         }
         
         .note {
             margin-bottom: 2.5mm;
             text-align: justify;
-            white-space: pre-wrap;
-            orphans: 3; /* Mínimo 3 líneas al final de página */
-            widows: 3;  /* Mínimo 3 líneas al inicio de página */
-        }
-
-        /* Control de saltos de página */
-        .page-break-before {
-            page-break-before: always;
-        }
-
-        .page-break-after {
-            page-break-after: always;
-        }
-
-        .avoid-break {
-            page-break-inside: avoid;
+            page-break-inside: avoid; /* Evitar corte de notas */
         }
 
         /* Espaciador para evitar colisión con footer */

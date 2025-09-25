@@ -85,12 +85,13 @@ export class PdfService {
 
         const pdfOptions: any = {
           format: 'A4',
-          height: 0.75,
+          width: '8.5in', // Ancho del papel
+          height: '11in', // Alto del papel
           printBackground: true,
-          preferCSSPageSize: true,
+          preferCSSPageSize: false,
           margin: { 
-            top: headerHtml ? '15mm' : '5mm', 
-            bottom: footerHtml ? '40mm' : '5mm', // Aumentado para dar más espacio 
+            top: '15mm' , 
+            bottom: '40mm', // Aumentado para dar más espacio 
             left: '0mm', 
             right: '0mm' 
           }
