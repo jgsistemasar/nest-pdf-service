@@ -116,7 +116,7 @@ export class PdfService {
           format: 'A4',
           printBackground: true,
           margin: { 
-            top: '5mm',
+            top: '40mm',
             bottom: '40mm', // Aumentar de 30mm a 40mm
             left: '0mm', 
             right: '0mm' 

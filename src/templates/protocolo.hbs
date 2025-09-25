@@ -5,7 +5,7 @@
     <title>PROTOCOLO {{protocoloNro}}</title>
     <style>
         @page {
-            margin: 0 45 0 0;
+            margin: 20 45 0 0;
             size: A4;
         }
         
@@ -228,12 +228,7 @@
     {{/if}}
 </head>
 <body {{#if firmado}}class="wm"{{/if}}>
-    {{#if _hasHeader}}
-    <!-- Header integrado -->
-    <div class="integrated-header">
-        {{{_headerTemplate}}}
-    </div>
-    {{/if}}
+
 
     <!-- Elementos verticales (absolutos, no fijos) -->
     <div class="vertical-left">
