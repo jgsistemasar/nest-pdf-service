@@ -5,14 +5,14 @@
     <title>PROTOCOLO {{protocoloNro}}</title>
     <style>
         @page {
-            margin: 20 45 0 0;
+            margin: 20 50 0 0;
             size: A4;
         }
         
         html, body {
             margin: 0;
             padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Open Sans', Arial, sans-serif; /* Open Sans para todo por defecto */
             font-size: 11px;
             color: #000;
             -webkit-print-color-adjust: exact !important;
@@ -31,7 +31,8 @@
             position: absolute;
             top: 18%;
             left: 50%;
-            width: 70%;
+            right: 25%;
+            width: 100%;
             height: 70%;
             transform: translateX(-50%) rotate(-18deg);
             opacity: 0.20;
@@ -114,8 +115,9 @@
             grid-column: 2;
             text-align: center;
             font-weight: 700;
-            text-decoration: underline;
             font-size: 20px;
+            font-family: 'GESTA', Arial, sans-serif; /* GESTA para título */
+
         }
         
         .hdr-meta {
@@ -167,6 +169,7 @@
         .assay-title {
             font-weight: 700;
             margin: 2mm 0 1mm 0;
+            font-family: 'GESTA', Arial, sans-serif; /* GESTA para títulos */
         }
         
         .assay-desc {

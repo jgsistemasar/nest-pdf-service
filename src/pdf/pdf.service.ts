@@ -24,6 +24,10 @@ export class PdfService {
     if (ext === '.svg') return 'image/svg+xml';
     if (ext === '.gif') return 'image/gif';
     if (ext === '.webp') return 'image/webp';
+    if (ext === '.woff') return 'font/woff';
+    if (ext === '.woff2') return 'font/woff2';
+    if (ext === '.ttf') return 'font/ttf';
+    if (ext === '.otf') return 'font/otf';
     return 'application/octet-stream';
   }
 
@@ -43,10 +47,19 @@ export class PdfService {
     }
     const source = fs.readFileSync(filePath, 'utf8');
     const globalAssetsDir = path.join(this.templatesDir, 'assets');
+    const fontsDir = path.join(this.templatesDir, 'fonts');
 
+    // Helper para assets (imágenes)
     Handlebars.unregisterHelper('asset');
     Handlebars.registerHelper('asset', (rel: string) => {
       const abs = path.join(globalAssetsDir, rel || '');
+      return this.toDataUri(abs);
+    });
+
+    // Helper para fuentes
+    Handlebars.unregisterHelper('font');
+    Handlebars.registerHelper('font', (rel: string) => {
+      const abs = path.join(fontsDir, rel || '');
       return this.toDataUri(abs);
     });
 
@@ -61,10 +74,18 @@ export class PdfService {
     }
     const source = fs.readFileSync(filePath, 'utf8');
     const globalAssetsDir = path.join(this.templatesDir, 'assets');
+    const fontsDir = path.join(this.templatesDir, 'fonts');
 
+    // Registrar helpers para header
     Handlebars.unregisterHelper('asset');
     Handlebars.registerHelper('asset', (rel: string) => {
       const abs = path.join(globalAssetsDir, rel || '');
+      return this.toDataUri(abs);
+    });
+
+    Handlebars.unregisterHelper('font');
+    Handlebars.registerHelper('font', (rel: string) => {
+      const abs = path.join(fontsDir, rel || '');
       return this.toDataUri(abs);
     });
 
@@ -79,10 +100,37 @@ export class PdfService {
     }
     const source = fs.readFileSync(filePath, 'utf8');
     const globalAssetsDir = path.join(this.templatesDir, 'assets');
+    const fontsDir = path.join(this.templatesDir, 'fonts');
 
+    // Registrar helpers para footer
     Handlebars.unregisterHelper('asset');
     Handlebars.registerHelper('asset', (rel: string) => {
       const abs = path.join(globalAssetsDir, rel || '');
+      return this.toDataUri(abs);
+    });
+
+    Handlebars.unregisterHelper('font');
+    Handlebars.registerHelper('font', (rel: string) => {
+      const abs = path.join(fontsDir, rel || '');
+      return this.toDataUri(abs);
+    });
+
+    const template = Handlebars.compile(source);
+    return template(data);
+  }
+
+  private compileFontDefinitions(data: any): string {
+    const filePath = path.join(this.templatesDir, 'fonts.hbs');
+    if (!fs.existsSync(filePath)) {
+      return ''; // No fonts template found, return empty
+    }
+    const source = fs.readFileSync(filePath, 'utf8');
+    const fontsDir = path.join(this.templatesDir, 'fonts');
+
+    // Registrar helper para fuentes
+    Handlebars.unregisterHelper('font');
+    Handlebars.registerHelper('font', (rel: string) => {
+      const abs = path.join(fontsDir, rel || '');
       return this.toDataUri(abs);
     });
 
@@ -91,15 +139,16 @@ export class PdfService {
   }
 
   async generate(templateName: string, data: any): Promise<Buffer> {
-    const html = this.compileTemplate(templateName, data);
     const headerHtml = this.compileHeaderTemplate(templateName, data);
     const footerHtml = this.compileFooterTemplate(templateName, data);
+    const fontDefinitions = this.compileFontDefinitions(data);
 
-    // Inyectar header en los datos
+    // Inyectar fuentes y header en los datos
     const enhancedData = {
       ...data,
       _headerTemplate: headerHtml,
-      _hasHeader: !!headerHtml
+      _hasHeader: !!headerHtml,
+      _fontDefinitions: fontDefinitions
     };
 
     const finalHtml = this.compileTemplate(templateName, enhancedData);
@@ -113,14 +162,14 @@ export class PdfService {
       await page.setContent(finalHtml, { waitUntil: 'networkidle0' });
 
       const pdfOptions: any = {
-          format: 'A4',
-          printBackground: true,
-          margin: { 
-            top: '40mm',
-            bottom: '40mm', // Aumentar de 30mm a 40mm
-            left: '0mm', 
-            right: '0mm' 
-          }
+        format: 'A4',
+        printBackground: true,
+        margin: { 
+          top: '25mm',
+          bottom: footerHtml ? '40mm' : '5mm',
+          left: '0mm', 
+          right: '0mm' 
+        }
       };
 
       // SOLO footerTemplate (se repite automáticamente)
@@ -129,7 +178,6 @@ export class PdfService {
         pdfOptions.displayHeaderFooter = true;
       }
 
-            // HeaderTemplate (se repite automáticamente)
       if (headerHtml) {
         pdfOptions.headerTemplate = headerHtml;
         pdfOptions.displayHeaderFooter = true;

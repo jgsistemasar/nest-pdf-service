@@ -1,63 +1,108 @@
 <style>
   .footer-content {
-    width: calc(100% - 45mm);
-    margin: 0 25mm 0 20mm;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 11px;
+    width: 100%;
+    font-family: 'Azo Sans', Arial, sans-serif; /* Azo Sans para footer */
     color: #000;
-    padding: 4mm 0 2mm 0;
+    padding: 0;
+    margin: 0;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-  }
-  
-  .footer-box {
-    position: relative;
-    border-top: 1px solid #6f6f6f;
-    padding: 2mm 0 0 6mm;
-  }
-  
-  .footer-box::before {
-    content: "";
-    position: absolute;
+    position: absolute; /* Pegado al borde */
+    bottom: 0; /* Sin espacio inferior */
     left: 0;
-    top: -1px;
-    bottom: 0;
-    width: 4mm;
-    background: #781719;
   }
   
-  .foot-text {
-    font-size: 10px; /* Reducir tamaño */
-    line-height: 1.25; /* Reducir interlineado */
+  .footer-main {
+    width: calc(100% - 45mm);
+    margin: 0 25mm 3mm 20mm; /* Márgenes para el contenido */
+    padding: 2mm 0;
   }
   
-  .foot-strong {
+  .footer-contact-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 10px;
+    line-height: 1.3;
+    margin-bottom: 2mm;
+  }
+  
+  .footer-left {
+    flex: 1;
+  }
+  
+  .footer-right {
+    text-align: right;
+    flex: 1;
+  }
+  
+  .footer-lab-info {
+    font-size: 9px;
+    line-height: 1.25;
+    margin-bottom: 2mm;
+  }
+  
+  .footer-strong {
     font-weight: 700;
   }
   
-  .foot-center {
+  .footer-center {
     text-align: center;
-    margin-top: 1mm; /* Reducir margen */
+    margin: 2mm 0;
+    font-size: 10px;
   }
   
-  .foot-dup {
+  .footer-dup {
     font-weight: 700;
     text-transform: uppercase;
     text-align: center;
-    margin-top: 2mm; /* Reducir margen */
+    margin: 2mm 0;
+    font-size: 11px;
   }
   
   .page-num {
     text-align: center;
-    margin-top: 2mm; /* Reducir margen */
-    font-size: 10px;
+    margin: 2mm 0;
+    font-size: 9px;
+  }
+  
+  .footer-color-bar {
+    height: 8mm;
+    width: 100%;
+    display: flex;
+    margin: 0; /* Pegada al borde inferior */
+  }
+  
+  .color-section-orange {
+    width: 10%;
+    background-color: #f39c12;
+  }
+  
+  .color-section-red {
+    width: 90%;
+    background-color: #84221f;
   }
 </style>
 
 <div class="footer-content">
-  <div class="footer-box">
-    <div class="foot-text">
-      <span class="foot-strong">
+  <div class="footer-main">
+    <!-- Información de contacto -->
+    <div class="footer-contact-info">
+      <div class="footer-left">
+        <div>Bv. Italia 1150</div>
+        <div><span class="footer-strong">(X5809BAS) General Cabrera.</span></div>
+        <div>Córdoba, Argentina.</div>
+      </div>
+      
+      <div class="footer-right">
+        <div>logistica@jla.com.ar</div>
+        <div><span class="footer-strong">+54 358 4931 340</span></div>
+      </div>
+    </div>
+
+    <!-- Información del laboratorio -->
+    <div class="footer-lab-info">
+      <span class="footer-strong">
         LABORATORIO N°: 
         {{#if dsProtocolo}}
         {{#with (lookup dsProtocolo 0)}}
@@ -67,27 +112,37 @@
       </span><br/>
       El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
     </div>
+
+    <!-- Lógica del duplicado -->
     {{#if duplicado}}
-    <div class="foot-center">
-      <div class="foot-strong">COPIA INFORMATIVA</div>
+    <div class="footer-center">
+      <div class="footer-strong">COPIA INFORMATIVA</div>
       <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
       <div>SENASA en cumplimiento de la resolución 436/02</div>
     </div>
-    <div class="foot-dup">DUPLICADO</div>
+    <div class="footer-dup">DUPLICADO</div>
     {{else}}
     {{#if dsProtocolo}}
     {{#with (lookup dsProtocolo 0) as |p0|}}
     {{#if p0.duplicado}}
-    <div class="foot-center">
-      <div class="foot-strong">COPIA INFORMATIVA</div>
+    <div class="footer-center">
+      <div class="footer-strong">COPIA INFORMATIVA</div>
       <div>Este reporte se emite únicamente para ser presentado por el exportador ante las autoridades de</div>
       <div>SENASA en cumplimiento de la resolución 436/02</div>
     </div>
-    <div class="foot-dup">DUPLICADO</div>
+    <div class="footer-dup">DUPLICADO</div>
     {{/if}}
     {{/with}}
     {{/if}}
     {{/if}}
+
+    <!-- Numeración de páginas -->
     <div class="page-num">Página <span class="pageNumber"></span> de <span class="totalPages"></span></div>
+  </div>
+
+  <!-- Barra de colores pegada al borde inferior -->
+  <div class="footer-color-bar">
+    <div class="color-section-orange"></div>
+    <div class="color-section-red"></div>
   </div>
 </div>
