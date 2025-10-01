@@ -156,6 +156,8 @@ export class PdfService {
     try {
       const browser = await puppeteer.launch({
         headless: true,
+          timeout: 120000,                // más que 30s
+          protocolTimeout: 120000,
         args: ['--no-sandbox', '--font-render-hinting=medium', '--allow-file-access-from-files']
       });
       const page = await browser.newPage();
@@ -165,7 +167,7 @@ export class PdfService {
         format: 'A4',
         printBackground: true,
         margin: { 
-          top: '25mm',
+          top: '35mm',
           bottom: footerHtml ? '40mm' : '5mm',
           left: '0mm', 
           right: '0mm' 
