@@ -15,6 +15,23 @@ import { PlanillaMuestreoDto } from './dto/planilla-muestreo.dto';
 export class PdfController {
   constructor(private readonly pdfService: PdfService) {}
 
+  /**
+   * Endpoint para generar PDFs
+   *
+   * Recibe:
+   * - body: Objeto CreatePdfDto con tipoDocumento y data
+   * - res: Objeto Response de Express
+   *
+   * Pasos:
+   * 1. Evalúa el tipo de documento solicitado (PROTOCOLO, PLANILLAMUESTREO, REPORTE, CERTIFICADO)
+   * 2. Llama al servicio PDF con la plantilla y datos correspondientes
+   * 3. Genera el PDF mediante el servicio
+   * 4. Define el nombre del archivo según el tipo de documento
+   * 5. Configura los headers de la respuesta (Content-Type, Content-Disposition)
+   * 6. Envía el buffer del PDF como respuesta
+   *
+   * Devuelve: Archivo PDF descargable
+   */
   @Post()
   @UseGuards(JwtAuthGuard)
   @HttpCode(200)
