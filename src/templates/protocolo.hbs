@@ -254,7 +254,12 @@
         </div>
 
         <div class="fields">
-            <div class="row"><div class="lbl">Sr./es de:</div><div class="val">{{srDe}}</div></div>
+            {{#if dsProtocolo}}
+            {{#each dsProtocolo}}
+            <div class="row"><div class="lbl">Sr./es de:</div><div class="val">{{this.exportadorValue}}</div></div>
+            {{/each}}
+            {{/if}}
+
             <div class="row"><div class="lbl">Domicilio:</div><div class="val">{{domicilio}}</div></div>
             <div class="row"><div class="lbl">Atención:</div><div class="val">{{atencion}}</div></div>
             <div class="row"><div class="lbl">De:</div><div class="val">{{de}}</div></div>
