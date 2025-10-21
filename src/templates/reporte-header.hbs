@@ -1,0 +1,85 @@
+<style>
+  .header-content {
+    width: 100%; /* Sin márgenes para la barra */
+    font-family: 'Azo Sans', Arial, sans-serif; /* Azo Sans para header */
+    color: #000;
+    padding: 0;
+    margin: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    position: absolute; /* Pegado al borde */
+    top: 0; /* Sin espacio superior */
+    left: 0;
+  }
+
+  .header-color-bar {
+    height: 3mm;
+    width: 100%;
+    display: flex;
+    margin: 0; /* Pegada al borde */
+  }
+
+  .color-section-orange {
+    width: 10%;
+    background-color: #f0ca6b;
+  }
+
+  .color-section-red {
+    width: 90%;
+    background-color: #84221f;
+  }
+
+  .header-main {
+    width: calc(100% - 45mm); /* Márgenes solo para el contenido */
+    margin: 8mm 25mm 0 20mm; /* Aumentado de 3mm a 5mm para más espacio */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 12mm;
+  }
+
+  .header-logo {
+    height: 22mm;
+    width: auto;
+    /* Removido 'top: 30' que no era CSS válido */
+  }
+
+  .header-website {
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Azo Sans', Arial, sans-serif; /* Azo Sans */
+  }
+
+    .header-website-sub {
+    font-size: 7px;
+    font-weight: 700;
+    text-align: center;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Azo Sans', Arial, sans-serif; /* Azo Sans */
+  }
+
+
+</style>
+
+<div class="header-content">
+  <div class="header-color-bar">
+    <div class="color-section-orange"></div>
+    <div class="color-section-red"></div>
+  </div>
+  <div class="header-main">
+    <div class="header-left">
+      <img src="{{asset 'logo-jla.png'}}" alt="JLA" class="header-logo">
+    </div>
+
+    <div class="header-right">
+      <div class="header-website">JLA.COM.AR</div>
+      <div class="header-website-sub">logistica@jla.com.ar</div>
+    </div>
+  </div>
+</div>

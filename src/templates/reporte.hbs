@@ -1,1 +1,366 @@
-<html><body><h1>{{titulo}}</h1></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>REPORTE DE RESULTADOS {{NumeroCompleto}}</title>
+    <style>
+        @page {
+            margin: 40 50 0 0;
+            size: A4;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Open Sans', Arial, sans-serif; /* Open Sans para todo por defecto */
+            font-size: 11px;
+            color: #000;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .wm {
+            position: absolute; /* NO fixed */
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .wm::before {
+            content: "";
+            position: absolute;
+            top: 18%;
+            left: 50%;
+            right: 25%;
+            width: 90%;
+            height: 70%;
+            transform: translateX(-50%) rotate(-3deg) scaleX(1.20);
+            opacity: 0.20;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+
+        /* Elementos verticales como contenido normal (NO fixed) */
+        .vertical-left {
+            position: absolute; /* NO fixed */
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 15mm;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: .75;
+        }
+
+        .vertical-left-text {
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .vertical-right {
+            position: absolute; /* NO fixed */
+            right: 2mm;
+            top: 12mm;
+            bottom: 12mm;
+            width: 20mm;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vertical-right img {
+            display: block;
+            height: 12mm;
+            width: auto;
+            transform: rotate(90deg);
+            transform-origin: center center;
+            image-rendering: -webkit-optimize-contrast;
+            position: relative;
+            top: -55mm;
+            opacity: .35;
+        }
+
+        /* Header integrado */
+        .integrated-header {
+            width: calc(100% - 45mm);
+            margin: 5mm 25mm 5mm 20mm;
+            height: auto;
+        }
+
+        /* Contenido principal con margen para footer */
+        .main-content {
+            margin: 0 25mm 40mm 20mm; /* Aumentar bottom margin de 30mm a 40mm */
+            position: relative;
+            z-index: 1;
+        }
+
+        .hdr {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end;
+            margin-bottom: 6mm;
+            margin-top: 5mm;
+        }
+
+        .hdr-title {
+            grid-column: 2;
+            text-align: center;
+            font-weight: 700;
+            font-size: 20px;
+            font-family: 'GESTA', Arial, sans-serif; /* GESTA para título */
+
+        }
+
+        .hdr-meta {
+            grid-column: 3;
+            font-size: 14px;
+            white-space: nowrap;
+            justify-self: end;
+        }
+
+        .fields {
+            margin-top: 2mm;
+            margin-bottom: 4mm;
+            border-bottom: 1px solid #000;
+            padding-bottom: 2mm;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 32mm 1fr;
+            column-gap: 4mm;
+            align-items: baseline;
+            line-height: 1.25;
+            margin-bottom: 1.5mm;
+        }
+
+        .lbl {
+            font-weight: 700;
+        }
+
+        .val {
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+
+        .fields-2 {
+            margin-top: 4mm;
+            margin-bottom: 6mm;
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 32mm 1fr;
+            column-gap: 4mm;
+            align-items: baseline;
+            line-height: 1.25;
+            margin-bottom: 1.5mm;
+        }
+
+        .assay-title {
+            font-weight: 700;
+            margin: 2mm 0 1mm 0;
+            font-family: 'GESTA', Arial, sans-serif; /* GESTA para títulos */
+        }
+
+        .assay-desc {
+            margin-bottom: 2mm;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        thead th {
+            border: none solid #000;
+            padding: 2.5mm 2mm;
+            text-align: center;
+            font-weight: 700;
+            background: #f0ca6b;
+            color: #000;
+        }
+
+        tbody td {
+            border: none solid #000;
+            padding: 2.5mm 2mm;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        /* Notas que fluyen correctamente */
+        .notes {
+            margin-top: 6mm;
+            margin-bottom: 6mm;
+        }
+
+        .note {
+            margin-bottom: 2.5mm;
+            text-align: justify;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        /* Contenido adicional para generar múltiples páginas */
+        .extended-notes {
+            margin-top: 10mm;
+            padding: 5mm;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+    {{#if firmado}}
+    <style>
+        .wm::before {
+            background-image: url('{{asset "tilde-mostaza-solo.png"}}');
+        }
+    </style>
+    {{/if}}
+</head>
+<body {{#if firmado}}class="wm"{{/if}}>
+
+
+    <!-- Elementos verticales (absolutos, no fijos) -->
+    <div class="vertical-left">
+        <div class="vertical-left-text">
+            <div>Ninguna parte de este documento puede ser reproducida, de ninguna forma o por ningún medio, sin previa autorización escrita de JLA</div>
+            <div>No part of this certificate can be reproduced in any form or by any means, whithout permission in written from JLA.</div>
+        </div>
+    </div>
+
+    <div class="vertical-right">
+        <img src="{{asset 'senasa.png'}}" alt="SENASA">
+    </div>
+
+    <!-- Contenido principal que PUEDE fluir -->
+    <div class="main-content">
+        <div class="hdr">
+            <div></div>
+            <div class="hdr-title">REPORTE DE RESULTADOS</div>
+            <div class="hdr-meta">Reporte Nro: {{NumeroCompleto}}</div>
+        </div>
+
+        <div class="fields">
+            {{#if dsReporteResultados}}
+            {{#each dsReporteResultados}}
+            {{#if ExportadorIncluirEnReporte}}
+            <div class="row"><div class="lbl">{{ExportadorLabel}}</div><div class="val">{{ExportadorValue}}</div></div>
+            {{/if}}
+            {{#if DomicilioIncluirEnReporte}}
+            <div class="row"><div class="lbl">{{DomicilioLabel}}</div><div class="val">{{DomicilioValue}}</div></div>
+            {{/if}}
+            {{#if AtencionIncluirEnReporte}}
+            <div class="row"><div class="lbl">{{AtencionLabel}}</div><div class="val">{{AtencionValue}}</div></div>
+            {{/if}}
+            {{#if DeIncluirEnReporte}}
+            <div class="row"><div class="lbl">{{DeLabel}}</div><div class="val">{{DeValue}}</div></div>
+            {{/if}}
+            {{/each}}
+            {{/if}}
+
+            <div class="row"><div class="lbl">Fecha de emisión:</div><div class="val">{{formatDate fechaEmision}}</div></div>
+        </div>
+
+        {{#if dsReporteResultadosLotes}}
+        {{#each dsReporteResultadosLotes}}
+        <div class="fields-2">
+            {{#if CantidadEnvaseIncluirEnReporte}}
+            <div class="row-2"><div class="lbl">{{CantidadEnvaseLabel}}</div><div class="val">{{CantidadEnvaseValue}}</div></div>
+            {{/if}}
+            {{#if ProductoIncluirEnReporte}}
+            <div class="row-2"><div class="lbl">{{ProductoLabel}}</div><div class="val">{{ProductoValue}}</div></div>
+            {{/if}}
+            {{#if LugarDeProcesadoIncluirEnReporte}}
+            <div class="row-2"><div class="lbl">{{LugarDeProcesadoLabel}}</div><div class="val">{{LugarDeProcesadoValue}}</div></div>
+            {{/if}}
+            {{#if MuestraIncluirEnReporte}}
+            <div class="row-2"><div class="lbl">{{Muestralabel}}</div><div class="val">{{MuestraValue}}</div></div>
+            {{/if}}
+            {{#if FechaMuestreoIncluirEnReporte}}
+            <div class="row-2"><div class="lbl">{{FechaMuestreoLabel}}</div><div class="val">{{FechaMuestreoValue}}</div></div>
+            {{/if}}
+        </div>
+        {{/each}}
+        {{/if}}
+
+        <div class="notes">
+            {{#if dsReporteResultadosNotasPreDetalle}}
+            {{#each dsReporteResultadosNotasPreDetalle}}
+            {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
+            {{/each}}
+            {{/if}}
+        </div>
+
+        {{#if dsReporteResultadosLotesDetalleAFLA}}
+        {{#with (lookup dsReporteResultadosLotesDetalleAFLA 0) as |afla0|}}
+        {{#if afla0.Descripcion}}<div class="assay-title">{{afla0.Descripcion}}</div>{{/if}}
+        {{#if afla0.Adicional}}<div class="assay-desc">{{afla0.Adicional}}</div>{{/if}}
+        {{/with}}
+        {{/if}}
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="left">Lote</th>
+                    <th>Fecha de análisis</th>
+                    <th>Fracción</th>
+                    <th>G2</th>
+                    <th>G1</th>
+                    <th>B2</th>
+                    <th>B1</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#if dsReporteResultadosLotes}}
+                {{#with (lookup dsReporteResultadosLotes 0) as |firstLot|}}
+                {{#if ../dsReporteResultadosLotesDetalleAFLA.length}}
+                {{#each ../dsReporteResultadosLotesDetalleAFLA}}
+                <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
+                    {{#if @first}}
+                    <td class="left" rowspan="{{../../dsReporteResultadosLotesDetalleAFLA.length}}" style="background:#fdecc8">
+                        {{#if firstLot.LoteValue}}{{firstLot.LoteValue}}{{else}}—{{/if}}
+                    </td>
+                    <td rowspan="{{../../dsReporteResultadosLotesDetalleAFLA.length}}">
+                        {{#if firstLot.FechaAnalisisValue}}{{firstLot.FechaAnalisisValue}}{{/if}}
+                    </td>
+                    {{/if}}
+                    <td>{{Fraccion}}</td>
+                    <td>{{AflaG2}}</td>
+                    <td>{{AflaG1}}</td>
+                    <td>{{AflaB2}}</td>
+                    <td>{{AflaB1}}</td>
+                    <td>{{AflaTotal}}</td>
+                </tr>
+                {{/each}}
+                {{/if}}
+                {{/with}}
+                {{/if}}
+            </tbody>
+        </table>
+
+        <div class="notes">
+            {{#if dsReporteResultadosNotas}}
+            {{#each dsReporteResultadosNotas}}
+            {{#if textoES}}<div class="note">{{textoES}}</div>{{/if}}
+            {{/each}}
+            {{/if}}
+        </div>
+
+
+    </div>
+</body>
+</html>
