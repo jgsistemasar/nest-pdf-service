@@ -306,8 +306,12 @@
 
         {{#if dsReporteResultadosLotesDetalleAFLA}}
         {{#with (lookup dsReporteResultadosLotesDetalleAFLA 0) as |afla0|}}
+        {{#if afla0.DescripcionIncluirEnReporte}}
         {{#if afla0.Descripcion}}<div class="assay-title">{{afla0.Descripcion}}</div>{{/if}}
+        {{/if}}
+        {{#if afla0.AdicionalIncluirEnReporte}}
         {{#if afla0.Adicional}}<div class="assay-desc">{{afla0.Adicional}}</div>{{/if}}
+        {{/if}}
         {{/with}}
         {{/if}}
 
@@ -329,6 +333,7 @@
                 {{#with (lookup dsReporteResultadosLotes 0) as |firstLot|}}
                 {{#if ../dsReporteResultadosLotesDetalleAFLA.length}}
                 {{#each ../dsReporteResultadosLotesDetalleAFLA}}
+                {{#if PlantillaIncluirEnReporte}}
                 <tr {{#unless @first}}style="border-top:1px solid #000"{{/unless}}>
                     {{#if @first}}
                     <td class="left" rowspan="{{../../dsReporteResultadosLotesDetalleAFLA.length}}" style="background:#fdecc8">
@@ -345,12 +350,54 @@
                     <td>{{AflaB1}}</td>
                     <td>{{AflaTotal}}</td>
                 </tr>
+                {{/if}}
                 {{/each}}
                 {{/if}}
                 {{/with}}
                 {{/if}}
             </tbody>
         </table>
+
+        {{#if dsReporteResultadosLotesDetalle}}
+        {{#if dsReporteResultadosLotesDetalle.length}}
+        {{#with (lookup dsReporteResultadosLotesDetalle 0) as |detalle0|}}
+        {{#if detalle0.DescripcionIncluirEnReporte}}
+        {{#if detalle0.Descripcion}}<div class="assay-title">{{detalle0.Descripcion}}</div>{{/if}}
+        {{/if}}
+        {{#if detalle0.AdicionalIncluirEnReporte}}
+        {{#if detalle0.Adicional}}<div class="assay-desc">{{detalle0.Adicional}}</div>{{/if}}
+        {{/if}}
+        {{/with}}
+        <div style="margin-top: 6mm;">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="left">Análisis Solicitado</th>
+                        <th>Resultado</th>
+                        <th>LDM</th>
+                        <th>Unidad</th>
+                        <th>Referencia</th>
+                        <th>Método</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each dsReporteResultadosLotesDetalle}}
+                    {{#if PlantillaIncluirEnReporte}}
+                    <tr>
+                        <td class="left">{{Ensayo}}</td>
+                        <td>{{ResultadoTexto}}</td>
+                        <td>{{LDM}}</td>
+                        <td>{{Unidad}}</td>
+                        <td>{{Referencia}}</td>
+                        <td>{{Metodo}}</td>
+                    </tr>
+                    {{/if}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        {{/if}}
+        {{/if}}
 
         <div class="notes">
             {{#if dsReporteResultadosNotas}}
