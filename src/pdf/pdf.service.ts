@@ -22,6 +22,27 @@ export class PdfService {
       return d.toLocaleDateString('es-AR');
     });
     Handlebars.registerHelper('json', (ctx: any) => JSON.stringify(ctx, null, 2));
+    Handlebars.registerHelper('isOdd', (index: number) => index % 2 !== 0);
+
+    // Helper para ordenar array según OrdenEnsayo (null va al final en orden original)
+    Handlebars.registerHelper('sortByOrden', (array: any[]) => {
+      if (!array || !Array.isArray(array)) return array;
+
+      // Crear copia del array con índice original
+      const indexed = array.map((item, idx) => ({ item, originalIndex: idx }));
+
+      // Separar elementos con OrdenEnsayo válido de los que tienen null
+      const withOrder = indexed.filter(x => x.item.OrdenEnsayo != null);
+      const withoutOrder = indexed.filter(x => x.item.OrdenEnsayo == null);
+
+      // Ordenar los que tienen OrdenEnsayo
+      withOrder.sort((a, b) => a.item.OrdenEnsayo - b.item.OrdenEnsayo);
+
+      // Concatenar: primero los ordenados, luego los sin orden (mantienen orden original)
+      const sorted = [...withOrder, ...withoutOrder];
+
+      return sorted.map(x => x.item);
+    });
   }
 
   private templatesDir = path.resolve(__dirname, '../templates');

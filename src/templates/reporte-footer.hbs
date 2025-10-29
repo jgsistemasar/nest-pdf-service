@@ -42,6 +42,17 @@
     margin-bottom: 2mm;
   }
 
+  .footer-lab-info ul {
+    margin: 0;
+    padding-left: 4mm;
+    list-style-type: disc; /* Viñetas redondas */
+  }
+
+  .footer-lab-info li {
+    margin: 0;
+    padding: 0;
+  }
+
   .footer-strong {
     font-weight: 700;
   }
@@ -86,30 +97,14 @@
 
 <div class="footer-content">
   <div class="footer-main">
-    <!-- Información de contacto -->
-    <div class="footer-contact-info">
-      <div class="footer-left">
-        <div>Bv. Italia 1150</div>
-        <div><span class="footer-strong">(X5809BAS) General Cabrera.</span></div>
-        <div>Córdoba, Argentina.</div>
-      </div>
-
-      <div class="footer-right">
-            <!-- Agregar pie de costado derecho -->
-      </div>
-    </div>
-
     <!-- Información del laboratorio -->
     <div class="footer-lab-info">
-      <span class="footer-strong">
-        LABORATORIO N°:
-        {{#if dsReporteResultados}}
-        {{#with (lookup dsReporteResultados 0)}}
-        {{codigoTipoLaboratorio}} - {{numeroSenasa}}
-        {{/with}}
-        {{/if}}
-      </span><br/>
-      El laboratorio se compromete a remitir resultados, en el presente, únicamente en acciones específicas, para las cuales se encuentre AUTORIZADO por la RED NACIONAL DE LABORATORIOS y a solo efecto de ser presentado ante el SENASA.
+      <ul>
+        <li>In compliance with OECD Principles of Good Laboratory Practices (No. 009)</li>
+        <li>Registered into SENASA's National registry of certification bodies and surveyors of export grains and its subproducts (No. 016)</li>
+        <li>Registered into SENASA's National Laboratories Network (No. LA0055 and LA0099)</li>
+        <li>certificate senasa</li>
+      </ul>
     </div>
 
     <!-- Lógica del duplicado -->

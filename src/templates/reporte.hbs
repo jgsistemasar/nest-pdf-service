@@ -202,6 +202,11 @@
             text-align: left;
         }
 
+        /* Fila totalizadora en negrita */
+        .totalizador {
+            font-weight: 700;
+        }
+
         /* Notas que fluyen correctamente */
         .notes {
             margin-top: 6mm;
@@ -381,9 +386,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{#each dsReporteResultadosLotesDetalle}}
+                    {{#each (sortByOrden dsReporteResultadosLotesDetalle)}}
                     {{#if PlantillaIncluirEnReporte}}
-                    <tr>
+                    <tr style="border-bottom: 1px solid #000;{{#if (isOdd @index)}} background: #fdecc8;{{/if}}"{{#if EstaEnTotalizador}} class="totalizador"{{/if}}>
                         <td class="left">{{Ensayo}}</td>
                         <td>{{ResultadoTexto}}</td>
                         <td>{{LDM}}</td>
